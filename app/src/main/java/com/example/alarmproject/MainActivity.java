@@ -13,19 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.Collection;
-import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String str_id;
-                int id;
 
                 int hour, hour_24, minute;
                 String am_pm;
@@ -97,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     hour = hour_24;
                     am_pm="AM";
                 }
-                id = hour_24+minute; // 숫자 id
-                str_id = String.valueOf(hour_24+minute);
 
                 // 현재 지정된 시간으로 알람 시간 설정
                 Calendar calendar = Calendar.getInstance();
@@ -112,38 +103,24 @@ public class MainActivity extends AppCompatActivity {
                     calendar.add(Calendar.DATE, 1);
                 }
 
-
                 Date currentDateTime = calendar.getTime();
                 String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
                 Toast.makeText(getApplicationContext(),date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
-                //  Preference에 설정한 값 저장 ( string 형태의 id로 저장)
+                //  Preference에 설정한 값 저장
                 SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                editor.putLong(str_id, (long)calendar.getTimeInMillis());
+                editor.putLong("nextNotifyTime", (long)calendar.getTimeInMillis());
                 editor.apply();
 
-                SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-                TextView textView1 = (TextView)findViewById(R.id.textView);
 
-                Collection<?> col =  sharedPreferences.getAll().values();
-                Iterator<?> it = col.iterator();
-                while(it.hasNext())
-                {
-                    String msg = (String)it.next();
-                    textView1.setText(msg);
-                }
-
-//                String text = sharedPreferences.getString(str_id, "0");
-//                textView1.setText(text);
-
-                diaryNotification(calendar, id); // 슷지 id를 넘겨줌
+                diaryNotification(calendar);
             }
 
         });
     }
 
 
-    void diaryNotification(Calendar calendar, int id)
+    void diaryNotification(Calendar calendar)
     {
 //        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -153,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 
