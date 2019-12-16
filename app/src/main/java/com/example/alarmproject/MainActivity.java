@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.SECOND, 0);
 
                 //  AlarmManager 등록 및 Preference에 설정한 값 저장
-                if (alarmCount < 4) {
+                if (alarmCount < 5) {
                     for (int i = 0; i < 5; i++) {
                         if (sharedPreferences.getLong(String.valueOf(i), 0) == 0) {
                             alarmPointer = i;
@@ -121,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     editor.putLong(String.valueOf(alarmPointer), (long) calendar.getTimeInMillis());
                     editor.putInt("alarmCount", alarmCount);
                     editor.apply();
-
                     alarmCount++;
-                    diaryNotification(calendar, alarmCount);
+                    diaryNotification(calendar, alarmPointer);
 
                 }else{
                     Toast.makeText(getApplicationContext(), "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        alarmIntent.putExtra("requestCode", String.valueOf(requestCode));
+        alarmIntent.putExtra("requestCode", requestCode);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 

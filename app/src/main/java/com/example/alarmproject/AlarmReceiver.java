@@ -26,17 +26,16 @@ import static android.content.Context.MODE_PRIVATE;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("test", "AlarmReceiver TEST");
 
+        Log.d("test", "AlarmReceiver TEST");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(context, MainActivity.class);
 
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent pendingI = PendingIntent.getActivity(context, 0,
+        PendingIntent pendingI = PendingIntent.getActivity(context, intent.getIntExtra("requestCode", 0),
                 notificationIntent, 0);
-
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
@@ -60,6 +59,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }else builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
         builder.setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
@@ -68,9 +68,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle("상태바 드래그시 보이는 타이틀")
                 .setContentText("상태바 드래그시 보이는 서브타이틀")
                 .setContentInfo("INFO")
+                .setSound(uri)
                 .setContentIntent(pendingI);
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        //builder.setSound(uri);
+        builder.setSound(uri);
 
         if (notificationManager != null) {
 
@@ -91,5 +91,15 @@ public class AlarmReceiver extends BroadcastReceiver {
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
             Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 자동 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
+
+        Intent temp = new Intent(context, MediaPlayActivity.class);
+        PendingIntent pi =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
+        try{
+            Log.d("test", "MediaPlayActivity1 Test");
+            pi.send();
+        }catch (PendingIntent.CanceledException e){
+            e.printStackTrace();
+        }
+
     }
 }
