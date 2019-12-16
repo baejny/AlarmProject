@@ -25,9 +25,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d("test", "BootReceiver TEST");
-
         if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
+            Log.d("test", "BootReceiver TEST");
             SharedPreferences sharedPreferences = context.getSharedPreferences("daily alarm", MODE_PRIVATE);
 
             for (int i = 0; i < 5; i++) {

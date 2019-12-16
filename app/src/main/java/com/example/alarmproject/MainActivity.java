@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < 5; i++) {
                         if (sharedPreferences.getLong(String.valueOf(i), 0) == 0) {
                             alarmPointer = i;
+                            break;
                         }
                     }
 
@@ -126,17 +127,36 @@ public class MainActivity extends AppCompatActivity {
 
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                     editor.putLong(String.valueOf(alarmPointer), (long) calendar.getTimeInMillis());
+                    alarmCount++;
                     editor.putInt("alarmCount", alarmCount);
                     editor.apply();
-
-                    alarmCount++;
                     diaryNotification(calendar, alarmCount);
-                    
+
                 }else{
                     Toast.makeText(getApplicationContext(), "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        Button btn_temp = findViewById(R.id.button_temp);
+        btn_temp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Log.d("test","delete");
+                SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+                for (int i = 0; i < 5; i++) {
+                    editor.putLong(String.valueOf(i), 0);
+                }
+                alarmCount = 0;
+                editor.putInt("alarmCount", 0);
+                editor.apply();
+            }
+        });
+        PackageManager pm = this.getPackageManager();
+        ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
 
 
