@@ -26,6 +26,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     int alarmCount;
+    int alarmPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         final TimePicker picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
         alarmCount = sharedPreferences.getInt("alarmCount", 0);
         Log.d("test", String.valueOf(alarmCount));
 
@@ -79,11 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 int hour, hour_24, minute;
                 //String am_pm;
 
-                if (Build.VERSION.SDK_INT >= 23 ){
+                if (Build.VERSION.SDK_INT >= 23) {
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
-                }
-                else{
+                } else {
                     hour_24 = picker.getCurrentHour();
                     minute = picker.getCurrentMinute();
                 }
@@ -107,28 +107,35 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
 
-                // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
-                if (calendar.before(Calendar.getInstance())) {
-                    calendar.add(Calendar.DATE, 1);
+                //  AlarmManager 등록 및 Preference에 설정한 값 저장
+                if (alarmCount < 4) {
+                    for (int i = 0; i < 5; i++) {
+                        if (sharedPreferences.getLong(String.valueOf(i), 0) == 0) {
+                            alarmPointer = i;
+                        }
+                    }
+
+                    // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
+                    if (calendar.before(Calendar.getInstance())) {
+                        calendar.add(Calendar.DATE, 1);
+                    }
+
+                    Date currentDateTime = calendar.getTime();
+                    String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
+                    Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+                    editor.putLong(String.valueOf(alarmPointer), (long) calendar.getTimeInMillis());
+                    editor.putInt("alarmCount", alarmCount);
+                    editor.apply();
+
+                    alarmCount++;
+                    diaryNotification(calendar, alarmCount);
+                    
+                }else{
+                    Toast.makeText(getApplicationContext(), "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
                 }
-
-                Date currentDateTime = calendar.getTime();
-                String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-                Toast.makeText(getApplicationContext(),date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
-
-                //  Preference에 설정한 값 저장
-                SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                editor.putLong(String.valueOf(alarmCount), (long)calendar.getTimeInMillis());
-                alarmCount++;
-                if(alarmCount>5){
-                    Log.d("test", "MAX count");
-                }
-                editor.putInt("alarmCount", alarmCount);
-                editor.apply();
-
-                diaryNotification(calendar, alarmCount);
             }
-
         });
     }
 
@@ -149,10 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
-
-
             if (alarmManager != null) {
-
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         AlarmManager.INTERVAL_DAY, pendingIntent);
 
