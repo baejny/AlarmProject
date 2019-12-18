@@ -29,22 +29,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.d("test", "AlarmReceiver TEST");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(context, MainActivity.class); // mainactivity에 notification알람 전달
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent pendingI = PendingIntent.getActivity(context, intent.getIntExtra("requestCode", 0),
-                notificationIntent, 0);
+        PendingIntent pendingI = PendingIntent.getActivity(context, intent.getIntExtra("requestCode", 0), notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
 
         //OREO API 26 이상에서는 채널 필요
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
             builder.setSmallIcon(R.drawable.ic_launcher_foreground); //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
-
 
             String channelName ="매일 알람 채널";
             String description = "매일 정해진 시간에 알람합니다.";
@@ -72,13 +68,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentIntent(pendingI);
         builder.setSound(uri);
 
+        // notification 동작 후 다음 날 같은 시간으로 저장후 toast
         if (notificationManager != null) {
-
             // 노티피케이션 동작시킴
             notificationManager.notify(1234, builder.build());
 
             Calendar nextNotifyTime = Calendar.getInstance();
-
             // 내일 같은 시간으로 알람시간 결정
             nextNotifyTime.add(Calendar.DATE, 1);
 
