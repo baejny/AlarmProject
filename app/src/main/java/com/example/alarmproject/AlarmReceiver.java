@@ -84,8 +84,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             //  Preference에 설정한 값 저장
             SharedPreferences.Editor editor = context.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-            editor.putLong(intent.getStringExtra("requestCode"), nextNotifyTime.getTimeInMillis());
+            //editor.putLong(intent.getStringExtra("requestCode"), nextNotifyTime.getTimeInMillis());
+            editor.putLong(intent.getStringExtra("requestCode"), 0);
             editor.apply();
+
+            Log.d("test", "AlarmReceiver Test requestCode = " + intent.getStringExtra("requestCode"));
 
             Date currentDateTime = nextNotifyTime.getTime();
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
