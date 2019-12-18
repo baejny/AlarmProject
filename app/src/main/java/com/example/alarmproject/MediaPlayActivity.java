@@ -29,6 +29,7 @@ public class MediaPlayActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mp.stop();
                 Intent intent = new Intent(MediaPlayActivity.this, MainActivity.class);
+
                 startActivity(intent);
                 finish();
             }

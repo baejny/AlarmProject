@@ -29,14 +29,15 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".AlarmReceiver"> </receiver>
 
-        <receiver android:name=".MediaPlayActivity">
+        <activity android:name=".MediaPlayActivity">
             <intent-filter>
-                <action android:name="arabiannight.tistory.com.widget.CALL_ACTIVITY"/>
+                <action android:name="arabiannight.tistory.com.widget.CALL_ACTIdOVITY"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </receiver>
+        </activity>
+
     </application>
 
 </manifest>

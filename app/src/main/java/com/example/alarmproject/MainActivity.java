@@ -17,22 +17,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.app.Activity;
 
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
     int alarmCount;
     int alarmPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -109,23 +111,23 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
 
                     int i;
-                    for (i = 0;i < 5; i++) {
-                        Log.d("int i", String.valueOf(i));
-                        Log.d("SP", String.valueOf(sharedPreferences.getLong(String.valueOf(i),0)));
-                        Log.d("SSPP", String.valueOf((long)calendar.getTimeInMillis()));
-                        if (sharedPreferences.getLong(String.valueOf(i), 0) == (long)calendar.getTimeInMillis()) {
-                            editor.remove(String.valueOf(i));
-                            editor.apply();
-
-                            alarmCount--;
-                            cancelAlarm(calendar, i);
-
-                            Date currentDateTime = calendar.getTime();
-                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-                            Toast.makeText(getApplicationContext(), date_text + "의 알람이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    }
+//                    for (i = 0;i < 5; i++) {
+//                        Log.d("int i", String.valueOf(i));
+//                        Log.d("SP", String.valueOf(sharedPreferences.getLong(String.valueOf(i),0)));
+//                        Log.d("SSPP", String.valueOf((long)calendar.getTimeInMillis()));
+//                        if (sharedPreferences.getLong(String.valueOf(i), 0) == (long)calendar.getTimeInMillis()) {
+//                            editor.remove(String.valueOf(i));
+//                            editor.apply();
+//
+//                            alarmCount--;
+//                            cancelAlarm(calendar, i);
+//
+//                            Date currentDateTime = calendar.getTime();
+//                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
+//                            Toast.makeText(getApplicationContext(), date_text + "의 알람이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        }
+//                    }
 
                 }else{
                     Toast.makeText(getApplicationContext(), "삭제할 알람이 없습니다.", Toast.LENGTH_SHORT).show();
