@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         F_Activity = MainActivity.this;
 
-        Log.d("test", "MainActivity OnCreate Test");
         Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
 
         picker=(TimePicker)findViewById(R.id.timePicker);
@@ -134,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
                     diaryNotification(sharedPreferences.getLong(selected,0),position,false );
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                    Log.d("test", "delete test = "+ selected);
                     editor.putLong(selected, 0);
                     editor.apply();
                 }else{
@@ -157,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void showAlarmList(){
-        Log.d("test", "showAlarmList Test");
         SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
         textView.setText("");
         for (int i = 0;i < 5; i++) {
@@ -186,8 +183,6 @@ public class MainActivity extends AppCompatActivity {
 
     void diaryNotification(Long TimeInMillis, int requestCode, boolean CheckNotify)
     {
-        Boolean dailyNotify = CheckNotify;
-
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
@@ -197,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 사용자가 매일 알람을 허용했다면
-        if (dailyNotify) {
+        if (CheckNotify) {
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis,
                         AlarmManager.INTERVAL_DAY, pendingIntent);
