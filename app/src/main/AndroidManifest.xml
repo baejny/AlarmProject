@@ -35,6 +35,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".ForeService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -22,7 +22,6 @@ import android.widget.Toast;
 import android.app.Activity;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner;
 
     public static Activity F_Activity;
-    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +63,6 @@ public class MainActivity extends AppCompatActivity {
         // 스피너 초기화
         makeSpinnerList();
 
-        if(ForeService.serviceIntent == null){
-            serviceIntent = new Intent(this, ForeService.class);
-            startService(serviceIntent);
-        }else{
-            serviceIntent  = ForeService.serviceIntent;
-        }
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -213,14 +205,14 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+        //Intent intentToService = new Intent(this, ForeService.class);
 
         // 사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis,
-                        AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, TimeInMillis, pendingIntent);
                 }
             }
@@ -239,15 +231,6 @@ public class MainActivity extends AppCompatActivity {
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
-        }
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        if(serviceIntent!=null){
-            stopService(serviceIntent);
-            serviceIntent=null;
         }
     }
 

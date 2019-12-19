@@ -8,8 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import android.app.Activity;
 
 import androidx.core.app.NotificationCompat;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d("test", "AlarmReceiver TEST");
+        //Log.d("test", "AlarmReceiver TEST");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(context, MainActivity.class);
 
@@ -95,16 +93,21 @@ public class AlarmReceiver extends BroadcastReceiver {
             Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 자동 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
 
-        MainActivity activity = (MainActivity)MainActivity.F_Activity;
+//        MainActivity activity = (MainActivity)MainActivity.F_Activity;
+//        activity.finish();
 
         Intent temp = new Intent(context, MediaPlayActivity.class);
-        PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
-        try{
-            Log.d("test", "MediaPlayActivity1 Test");
-            sender.send();
-            activity.finish();
-        }catch (PendingIntent.CanceledException e){
-            e.printStackTrace();
-        }
+        temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(temp);
+        Log.d("test", "----------------------------------------");
+
+//        PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_CANCEL_CURRENT);
+//        try{
+//            Log.d("test", "MediaPlayActivity1 Test");
+//            sender.send();
+//            activity.finish();
+//        }catch (PendingIntent.CanceledException e){
+//            e.printStackTrace();
+//        }
     }
 }
