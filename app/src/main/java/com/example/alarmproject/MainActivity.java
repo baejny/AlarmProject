@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.HOUR_OF_DAY, hour_24);
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
-
+                calendar.set(Calendar.MILLISECOND, 0);
 
                 //  AlarmManager 등록 및 Preference에 설정한 값 저장
                 alarmCount = getAlarmCount();
@@ -101,13 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
                     if (calendar.before(Calendar.getInstance())) {
-                        //calendar.add(Calendar.DATE, 1);
-                        Toast.makeText(getApplicationContext(),"이미 저장된 시간입니다!", Toast.LENGTH_SHORT).show();
-                        return;
+                        calendar.add(Calendar.DATE, 1);
+                        //Toast.makeText(getApplicationContext(),"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
                     }
 
                     Date currentDateTime = calendar.getTime();
-                    String date_text = new SimpleDateFormat("yyyy/MM/dd/EEE hh시-mm분 ", Locale.getDefault()).format(currentDateTime);
+                    String date_text = new SimpleDateFormat("yyyy년MM월dd일 hh시mm분 ", Locale.getDefault()).format(currentDateTime);
                     Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0;i < 5; i++) {
             Long timeMillis = sharedPreferences.getLong(String.valueOf(i), 0);
             if (timeMillis != 0) {
-                String pattern = "HH시 mm분";
+                String pattern = "MM월dd일 HH시mm분";
                 SimpleDateFormat formatter = new SimpleDateFormat(pattern);
                 String date = (String)formatter.format(new Timestamp(timeMillis));
                 textView.append(i+1 + " : " + date);

@@ -34,11 +34,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("test", "AlarmReceiver TEST");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(context, MainActivity.class);
-
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
         PendingIntent pendingI = PendingIntent.getActivity(context, intent.getIntExtra("requestCode", 0), notificationIntent, 0);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
 
@@ -59,19 +56,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }else builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
-        //Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
-        //Uri uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
         builder.setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-
                 .setTicker("{Time to watch some cool stuff!}")
                 .setContentTitle("상태바 드래그시 보이는 타이틀")
                 .setContentText("상태바 드래그시 보이는 서브타이틀")
                 .setContentInfo("INFO")
-                //.setSound(uri)
                 .setContentIntent(pendingI);
-        //builder.setSound(uri);
 
         // notification 동작 후 다음 날 같은 시간으로 저장후 toast
         if (notificationManager != null) {
