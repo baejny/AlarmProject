@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                     editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
                     editor.apply();
-                    diaryNotification(calendar, alarmPointer);
+                    diaryNotification((long)calendar.getTimeInMillis(), alarmPointer, true);
 
                 }else{
                     Toast.makeText(getApplicationContext(), "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
@@ -128,7 +128,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 alarmCount = getAlarmCount();
                 if (alarmCount > 0) {
-                    String selected = String.valueOf(spinner.getSelectedItemPosition());
+                    SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+                    int position = spinner.getSelectedItemPosition();
+                    String selected = String.valueOf(position);
+
+                    diaryNotification(sharedPreferences.getLong(selected,0),position,false );
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                     Log.d("test", "delete test = "+ selected);
                     editor.putLong(selected, 0);
@@ -190,20 +194,9 @@ public class MainActivity extends AppCompatActivity {
         spinner.setSelection(0);
     }
 
-    void cancelAlarm(Calendar calendar, int requestCode)
+    void diaryNotification(Long TimeInMillis, int requestCode, boolean CheckNotify)
     {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
-        alarmManager.cancel(pendingIntent);
-        pendingIntent.cancel();
-
-        //ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
-    }
-
-    void diaryNotification(Calendar calendar, int requestCode)
-    {
-        Boolean dailyNotify = true; // 무조건 알람을 사용
+        Boolean dailyNotify = CheckNotify;
 
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
@@ -216,11 +209,11 @@ public class MainActivity extends AppCompatActivity {
         // 사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis,
                         AlarmManager.INTERVAL_DAY, pendingIntent);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, TimeInMillis, pendingIntent);
                 }
             }
 
@@ -230,15 +223,15 @@ public class MainActivity extends AppCompatActivity {
                     PackageManager.DONT_KILL_APP);
 
         }
-//        else { //Disable Daily Notifications
-//            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
-//                alarmManager.cancel(pendingIntent);
-//                //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
-//            }
-//            pm.setComponentEnabledSetting(receiver,
-//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-//                    PackageManager.DONT_KILL_APP);
-//        }
+        else { //Disable Daily Notifications
+            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
+                alarmManager.cancel(pendingIntent);
+                //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
+            }
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
     }
 
 }
