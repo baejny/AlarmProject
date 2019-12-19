@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.app.Activity;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -159,24 +160,14 @@ public class MainActivity extends AppCompatActivity {
     void showAlarmList(){
         Log.d("test", "showAlarmList Test");
         SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        String hour_t, min_t;
-        long dayint = 24*60*60*1000;
-        long hourint = 60*60*1000;
-        long minuteint = 60*1000;
-        long day, hours, mins, save;
         textView.setText("");
         for (int i = 0;i < 5; i++) {
-            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-                save = sharedPreferences.getLong(String.valueOf(i), 0);
-                day = save / dayint;
-                save %= dayint;
-                hours = save / hourint;
-                save %= hourint;
-                hour_t = String.valueOf(hours);
-                mins = save / minuteint;
-                save %= minuteint;
-                min_t = String.valueOf(mins);
-                textView.append(i+1 + " : " + hour_t + "시" + min_t + "분");
+            Long timeMillis = sharedPreferences.getLong(String.valueOf(i), 0);
+            if (timeMillis != 0) {
+                String pattern = "HH시 mm분";
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+                String date = (String)formatter.format(new Timestamp(timeMillis));
+                textView.append(i+1 + " : " + date);
             }
             if(i!=4){
                 textView.append("\n");
@@ -202,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         alarmIntent.putExtra("requestCode", requestCode);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 
