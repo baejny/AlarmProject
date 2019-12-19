@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.app.Activity;
 
 import androidx.core.app.NotificationCompat;
 
@@ -59,7 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }else builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
         //Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
-        Uri uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+        //Uri uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
         builder.setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
@@ -68,9 +69,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle("상태바 드래그시 보이는 타이틀")
                 .setContentText("상태바 드래그시 보이는 서브타이틀")
                 .setContentInfo("INFO")
-                .setSound(uri)
+                //.setSound(uri)
                 .setContentIntent(pendingI);
-        builder.setSound(uri);
+        //builder.setSound(uri);
 
         // notification 동작 후 다음 날 같은 시간으로 저장후 toast
         if (notificationManager != null) {
@@ -83,18 +84,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             // Preference에 설정한 값 저장
             SharedPreferences.Editor editor = context.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-            editor.putLong(intent.getStringExtra("requestCode"), nextNotifyTime.getTimeInMillis());
+            //editor.putLong(intent.getStringExtra("requestCode"), nextNotifyTime.getTimeInMillis());
+            editor.putLong(intent.getStringExtra("requestCode"), 0);
             editor.apply();
+
+            Log.d("test", "AlarmReceiver Test requestCode = " + intent.getStringExtra("requestCode"));
 
             Date currentDateTime = nextNotifyTime.getTime();
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
             Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 자동 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
+
+        MainActivity activity = (MainActivity)MainActivity.F_Activity;
+
         Intent temp = new Intent(context, MediaPlayActivity.class);
         PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
         try{
             Log.d("test", "MediaPlayActivity1 Test");
             sender.send();
+            activity.finish();
         }catch (PendingIntent.CanceledException e){
             e.printStackTrace();
         }

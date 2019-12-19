@@ -13,24 +13,31 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.app.Activity;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     int alarmCount;
     int alarmPointer;
+
+    TimePicker picker;
+    TextView textView;
+    Button btn_save;
+    Button btn_remove;
+    Spinner spinner;
+
+    public static Activity F_Activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,26 +45,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TimePicker picker=(TimePicker)findViewById(R.id.timePicker);
+        F_Activity = MainActivity.this;
+
+        Log.d("test", "MainActivity OnCreate Test");
+        Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
+
+        picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        alarmCount = sharedPreferences.getInt("alarmCount", 0);
-        Log.d("test", String.valueOf(alarmCount));
+        textView = (TextView)findViewById(R.id.textView);
+        btn_save = (Button) findViewById(R.id.button_save);
+        btn_remove = (Button) findViewById(R.id.button_remove);
+        btn_remove = (Button) findViewById(R.id.button_remove);
+        spinner = (Spinner) findViewById(R.id.spinner);
 
-        final TextView textView = (TextView)findViewById(R.id.textView);
-
-        Button button = (Button) findViewById(R.id.button);
-        Button DeleteBtn= (Button) findViewById(R.id.button2);
-        Button listBtn = (Button) findViewById(R.id.button3);
+        // 리스트 초기화
+        showAlarmList();
+        // 스피너 초기화
+        makeSpinnerList();
 
         // 등록
-        button.setOnClickListener(new View.OnClickListener() {
+        btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
 
                 int hour_24, minute;
-
                 if (Build.VERSION.SDK_INT >= 23) {
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
@@ -73,8 +85,12 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
 
+
                 //  AlarmManager 등록 및 Preference에 설정한 값 저장
+                alarmCount = getAlarmCount();
                 if (alarmCount < 5) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+
                     for (int i = 0; i < 5; i++) {
                         if (sharedPreferences.getLong(String.valueOf(i), 0) == 0) {
                             alarmPointer = i;
@@ -84,85 +100,96 @@ public class MainActivity extends AppCompatActivity {
 
                     // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
                     if (calendar.before(Calendar.getInstance())) {
-                        calendar.add(Calendar.DATE, 1);
+                        //calendar.add(Calendar.DATE, 1);
+                        Toast.makeText(getApplicationContext(),"이미 저장된 시간입니다!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     Date currentDateTime = calendar.getTime();
-                    String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
+                    String date_text = new SimpleDateFormat("yyyy/MM/dd/EEE hh시-mm분 ", Locale.getDefault()).format(currentDateTime);
                     Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                    editor.putLong(String.valueOf(alarmPointer), (long) calendar.getTimeInMillis());
-                    editor.putInt("alarmCount", alarmCount);
+                    editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
                     editor.apply();
-                    alarmCount++;
                     diaryNotification(calendar, alarmPointer);
 
                 }else{
                     Toast.makeText(getApplicationContext(), "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
                 }
+
+                showAlarmList();
             }
         });
+
         // 삭제
-        DeleteBtn.setOnClickListener(new View.OnClickListener() {
+        btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if(alarmCount > 0){
+                alarmCount = getAlarmCount();
+                if (alarmCount > 0) {
+                    String selected = String.valueOf(spinner.getSelectedItemPosition());
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-
-                    int i;
-//                    for (i = 0;i < 5; i++) {
-//                        Log.d("int i", String.valueOf(i));
-//                        Log.d("SP", String.valueOf(sharedPreferences.getLong(String.valueOf(i),0)));
-//                        Log.d("SSPP", String.valueOf((long)calendar.getTimeInMillis()));
-//                        if (sharedPreferences.getLong(String.valueOf(i), 0) == (long)calendar.getTimeInMillis()) {
-//                            editor.remove(String.valueOf(i));
-//                            editor.apply();
-//
-//                            alarmCount--;
-//                            cancelAlarm(calendar, i);
-//
-//                            Date currentDateTime = calendar.getTime();
-//                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-//                            Toast.makeText(getApplicationContext(), date_text + "의 알람이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        }
-//                    }
-
+                    Log.d("test", "delete test = "+ selected);
+                    editor.putLong(selected, 0);
+                    editor.apply();
                 }else{
                     Toast.makeText(getApplicationContext(), "삭제할 알람이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        // 리스트 뷰
-        listBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View arg0){
-                SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                // 분은 잘 나옴. 시간이 다름
-                String hour_t, min_t;
-                long dayint = 24*60*60*1000;
-                long hourint = 60*60*1000;
-                long minuteint = 60*1000;
-                long day, hours, mins, save;
-
-                textView.setText("저장된 시간"+"\n");
-                for (int i = 0;i < 5; i++) {
-                    if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-                        save = sharedPreferences.getLong(String.valueOf(i), 0);
-                        day = save/dayint; save %=dayint;
-                        hours = save/hourint; save %=hourint;
-                        hour_t = String.valueOf(hours);
-                        textView.append("\n"+hour_t);
-                        mins = save/minuteint; save %=minuteint;
-                        min_t = String.valueOf(mins);
-                        textView.append("시 "+min_t+"분");
-                    }
-                }
+                showAlarmList();
             }
         });
     }
+
+    int getAlarmCount(){
+        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+        int result = 0;
+        for(int i=0; i<5; i++){
+            if(sharedPreferences.getLong(String.valueOf(i),0) != 0){
+                result++;
+            }
+        }
+        return result;
+    }
+
+    void showAlarmList(){
+        Log.d("test", "showAlarmList Test");
+        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+        String hour_t, min_t;
+        long dayint = 24*60*60*1000;
+        long hourint = 60*60*1000;
+        long minuteint = 60*1000;
+        long day, hours, mins, save;
+        textView.setText("");
+        for (int i = 0;i < 5; i++) {
+            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
+                save = sharedPreferences.getLong(String.valueOf(i), 0);
+                day = save / dayint;
+                save %= dayint;
+                hours = save / hourint;
+                save %= hourint;
+                hour_t = String.valueOf(hours);
+                mins = save / minuteint;
+                save %= minuteint;
+                min_t = String.valueOf(mins);
+                textView.append(i+1 + " : " + hour_t + "시" + min_t + "분");
+            }
+            if(i!=4){
+                textView.append("\n");
+            }
+        }
+    }
+
+    void makeSpinnerList(){
+        String[] facilityList = {"1","2","3","4","5"};
+        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                facilityList);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
+    }
+
     void cancelAlarm(Calendar calendar, int requestCode)
     {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -213,4 +240,5 @@ public class MainActivity extends AppCompatActivity {
 //                    PackageManager.DONT_KILL_APP);
 //        }
     }
+
 }

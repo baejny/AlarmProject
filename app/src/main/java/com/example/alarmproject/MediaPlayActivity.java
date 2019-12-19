@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.content.Context;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MediaPlayActivity extends AppCompatActivity {
@@ -15,11 +15,16 @@ public class MediaPlayActivity extends AppCompatActivity {
     MediaPlayer mp;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         Log.d("test", "MediaPlayActivity Test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mediaplay);
 
+        if(mp!=null){
+            mp.stop();
+            mp.release();
+            mp = null;
+        }
         mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.alarm);
         mp.start();
 
@@ -28,6 +33,7 @@ public class MediaPlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mp.stop();
+                mp.release();
                 Intent intent = new Intent(MediaPlayActivity.this, MainActivity.class);
 
                 startActivity(intent);
