@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner;
 
     public static Activity F_Activity;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
         showAlarmList();
         // 스피너 초기화
         makeSpinnerList();
+
+        if(ForeService.serviceIntent == null){
+            serviceIntent = new Intent(this, ForeService.class);
+            startService(serviceIntent);
+        }else{
+            serviceIntent  = ForeService.serviceIntent;
+        }
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -200,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class); // alarmReceiver 주는 인텐트
         alarmIntent.putExtra("requestCode", requestCode);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 
@@ -231,6 +239,15 @@ public class MainActivity extends AppCompatActivity {
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(serviceIntent!=null){
+            stopService(serviceIntent);
+            serviceIntent=null;
         }
     }
 
