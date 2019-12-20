@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,12 +30,18 @@ public class AlarmMethod{
     int alarmCount;
     int alarmPointer;
 
+    private  AlarmListener mListener;
+    public void setListener(AlarmListener listener){
+        mListener = listener;
+    }
+
     AlarmMethod(Context context, SharedPreferences sharedPreferences){
         this.context = context;
         this.sharedPreferences = sharedPreferences;
         this.alarmIntent = new Intent(context, AlarmReceiver.class);
         this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Log.d("test", "AlarmMethod Constructed");
+        Log.d("test", "AlarmCount = " + String.valueOf(getAlarmCount()));
     }
 
     void alarm_insert(int hour, int minute){
@@ -80,6 +87,9 @@ public class AlarmMethod{
             Toast.makeText(context, "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
         }
 
+        if(mListener != null){
+            mListener.onList(make_list());
+        }
     }
 
     void alarm_delete(int SelectedItemPosition){
@@ -96,6 +106,27 @@ public class AlarmMethod{
         }else{
             Toast.makeText(context, "알람이 없습니다.", Toast.LENGTH_SHORT).show();
         }
+
+        if(mListener != null){
+            mListener.onList(make_list());
+        }
+    }
+
+    String make_list(){
+        String msg = "";
+        for (int i = 0;i < 5; i++) {
+            Long timeMillis = sharedPreferences.getLong(String.valueOf(i), 0);
+            if (timeMillis != 0) {
+                String pattern = "MM월dd일 HH시mm분";
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+                String date = (String)formatter.format(new Timestamp(timeMillis));
+                msg += (i+1 + " : " + date);
+            }
+            if(i!=4){
+                msg += ("\n");
+            }
+        }
+        return msg;
     }
 
     int getAlarmCount(){
