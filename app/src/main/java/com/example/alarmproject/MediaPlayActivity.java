@@ -19,6 +19,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mediaplay);
 
+
         if(mp!=null){
             mp.stop();
             mp.release();
@@ -42,6 +43,12 @@ public class MediaPlayActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("test","MediaplayActivity Stop");
+        //Log.d("test","MediaplayActivity Stop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Log.d("test","MediaplayActivity Destroy");
     }
 }

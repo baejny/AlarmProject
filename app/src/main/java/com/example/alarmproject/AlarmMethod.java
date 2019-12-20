@@ -22,26 +22,25 @@ import java.util.Locale;
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
-
-    Intent alarmIntent;
     AlarmManager alarmManager;
 
     int alarmCount;
     int alarmPointer;
 
+    AlarmMethod(Context context, SharedPreferences sharedPreferences){
+        this.context = context;
+        this.sharedPreferences = sharedPreferences;;
+        this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        PackageManager pm = this.context.getPackageManager();
+        ComponentName receiver = new ComponentName(this.context, DeviceBootReceiver.class);
+        pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    //리스너 부착
     private  AlarmListener mListener;
     public void setListener(AlarmListener listener){
         mListener = listener;
         mListener.onList(make_list());
-    }
-
-    AlarmMethod(Context context, SharedPreferences sharedPreferences){
-        this.context = context;
-        this.sharedPreferences = sharedPreferences;
-        this.alarmIntent = new Intent(context, AlarmReceiver.class);
-        this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Log.d("test", "AlarmMethod Constructed");
-        Log.d("test", "AlarmCount = " + String.valueOf(getAlarmCount()));
     }
 
     //알람 등록
@@ -76,7 +75,9 @@ public class AlarmMethod{
             editor.apply();
 
             Long millis = calendar.getTimeInMillis();
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, 0);
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.putExtra("alarmPointer", alarmPointer);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
 
@@ -97,6 +98,8 @@ public class AlarmMethod{
     void alarm_delete(int SelectedItemPosition){
         alarmCount = getAlarmCount();
         if(alarmCount > 0){
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.putExtra("alarmPointer", SelectedItemPosition);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0);
             if (PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0) != null && alarmManager != null) {
                 alarmManager.cancel(pendingIntent);
@@ -121,7 +124,7 @@ public class AlarmMethod{
                 count++;
             }
         }
-        Toast.makeText(context, "[재부팅]" + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
     String make_list(){
