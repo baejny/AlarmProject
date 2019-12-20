@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     int alarmCount;
     int alarmPointer;
@@ -37,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
     Button btn_remove;
     Spinner spinner;
 
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
 
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         showAlarmList();
         // 스피너 초기화
         makeSpinnerList();
-
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
