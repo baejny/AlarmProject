@@ -81,17 +81,5 @@ public class AlarmReceiver extends BroadcastReceiver {
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EEE a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
             Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 자동 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
-
-        Intent temp = new Intent(context, MediaPlayActivity.class);
-        PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
-        try{
-            sender.send();
-        }catch (PendingIntent.CanceledException e){
-            e.printStackTrace();
-        }
-
-        temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(temp);
-        Log.d("test", "----------------------------------------");
     }
 }
