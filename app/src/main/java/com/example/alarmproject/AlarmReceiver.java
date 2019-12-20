@@ -85,7 +85,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent temp = new Intent(context, MediaPlayActivity.class);
         temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(temp);
-        Log.d("test", "----------------------------------------");
-
     }
 }
