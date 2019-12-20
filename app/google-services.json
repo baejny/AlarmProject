@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "709656207571",
+    "firebase_url": "https://alarmdb-e47f0.firebaseio.com",
+    "project_id": "alarmdb-e47f0",
+    "storage_bucket": "alarmdb-e47f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709656207571:android:17c694d1c5b91ef5e53426",
+        "android_client_info": {
+          "package_name": "com.example.alarmproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709656207571-3mhtv6p66ssldbhn2uf0l2h5699j0k0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpek4HGYa3ZoiH3BmPrHMyv6eY0aGw-xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709656207571-3mhtv6p66ssldbhn2uf0l2h5699j0k0d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
