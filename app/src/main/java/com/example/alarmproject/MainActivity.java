@@ -12,9 +12,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 public class MainActivity extends AppCompatActivity implements AlarmListener {
     int alarmCount;
     int alarmPointer;
@@ -25,10 +22,6 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     Button btn_remove;
     Spinner spinner;
 
-    // firebase 에 데이터를 읽고 쓰기 위해서는 DatabaseReference를 사용해야 함. 파이어 베이스와 연결
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-    
     @Override
     public void onList(String msg) {
         ((TextView)findViewById(R.id.textView)).setText(msg);

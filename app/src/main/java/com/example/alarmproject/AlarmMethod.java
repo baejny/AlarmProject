@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
@@ -29,7 +31,11 @@ public class AlarmMethod{
     int alarmCount;
     int alarmPointer;
 
-    private  AlarmListener mListener;
+    // firebase 에 데이터를 읽고 쓰기 위해서는 DatabaseReference를 사용해야 함. 파이어 베이스와 연결
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+
+    private AlarmListener mListener;
     public void setListener(AlarmListener listener){
         mListener = listener;
         mListener.onList(make_list());
@@ -46,6 +52,7 @@ public class AlarmMethod{
 
     //알람 등록
     void alarm_insert(int hour, int minute){
+        String str_id;
         alarmCount = getAlarmCount();
         if (alarmCount < 5) {
             for (int i = 0; i < 5; i++) {
@@ -74,6 +81,11 @@ public class AlarmMethod{
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
             editor.apply();
+
+            str_id = String.valueOf(hour).concat(String.valueOf(minute)); // 나중에 코드로 바꾸기
+
+            databaseReference.child(str_id).child("hour").setValue(hour);
+            databaseReference.child(str_id).child("minute").setValue(minute);
 
             Long millis = calendar.getTimeInMillis();
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, 0);
