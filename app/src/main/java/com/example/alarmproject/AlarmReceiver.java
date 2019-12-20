@@ -83,15 +83,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         Intent temp = new Intent(context, MediaPlayActivity.class);
-        PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
-        try{
-            sender.send();
-        }catch (PendingIntent.CanceledException e){
-            e.printStackTrace();
-        }
-
         temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(temp);
-        Log.d("test", "----------------------------------------");
     }
 }
