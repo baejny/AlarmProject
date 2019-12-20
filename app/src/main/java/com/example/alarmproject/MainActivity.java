@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     
     @Override
     public void onList(String msg) {
-        Log.d("test","listener Test");
         ((TextView)findViewById(R.id.textView)).setText(msg);
     }
 

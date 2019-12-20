@@ -25,7 +25,6 @@ public class AlarmMethod{
 
     Intent alarmIntent;
     AlarmManager alarmManager;
-    PendingIntent pendingIntent;
 
     int alarmCount;
     int alarmPointer;
@@ -33,6 +32,7 @@ public class AlarmMethod{
     private  AlarmListener mListener;
     public void setListener(AlarmListener listener){
         mListener = listener;
+        mListener.onList(make_list());
     }
 
     AlarmMethod(Context context, SharedPreferences sharedPreferences){
@@ -44,6 +44,7 @@ public class AlarmMethod{
         Log.d("test", "AlarmCount = " + String.valueOf(getAlarmCount()));
     }
 
+    //알람 등록
     void alarm_insert(int hour, int minute){
         alarmCount = getAlarmCount();
         if (alarmCount < 5) {
@@ -75,7 +76,7 @@ public class AlarmMethod{
             editor.apply();
 
             Long millis = calendar.getTimeInMillis();
-            pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, 0);
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
 
@@ -92,24 +93,35 @@ public class AlarmMethod{
         }
     }
 
+    //알람 삭제
     void alarm_delete(int SelectedItemPosition){
-        Log.d("test","delete Test");
         alarmCount = getAlarmCount();
         if(alarmCount > 0){
-            pendingIntent = PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0);
-            if (PendingIntent.getBroadcast(this.context, SelectedItemPosition, alarmIntent, 0) != null && alarmManager != null) {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0);
+            if (PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0) != null && alarmManager != null) {
                 alarmManager.cancel(pendingIntent);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong(String.valueOf(SelectedItemPosition), 0);
                 editor.apply();
             }
         }else{
-            Toast.makeText(context, "알람이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
         }
 
         if(mListener != null){
             mListener.onList(make_list());
         }
+    }
+
+    //디바이스 부팅시 알람 초기화
+    void alarm_boot(){
+        int count = 0;
+        for (int i = 0; i < 5; i++) {
+            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
+                count++;
+            }
+        }
+        Toast.makeText(context, "[재부팅]" + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
     String make_list(){
