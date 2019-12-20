@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.app.Activity;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,17 +37,13 @@ public class MainActivity extends AppCompatActivity {
     Button btn_remove;
     Spinner spinner;
 
-    public static Activity F_Activity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        F_Activity = MainActivity.this;
 
-        Log.d("test", "MainActivity OnCreate Test");
         Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
 
         picker=(TimePicker)findViewById(R.id.timePicker);
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.HOUR_OF_DAY, hour_24);
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
-
+                calendar.set(Calendar.MILLISECOND, 0);
 
                 //  AlarmManager 등록 및 Preference에 설정한 값 저장
                 alarmCount = getAlarmCount();
@@ -100,13 +97,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
                     if (calendar.before(Calendar.getInstance())) {
-                        //calendar.add(Calendar.DATE, 1);
-                        Toast.makeText(getApplicationContext(),"이미 저장된 시간입니다!", Toast.LENGTH_SHORT).show();
-                        return;
+                        calendar.add(Calendar.DATE, 1);
+                        //Toast.makeText(getApplicationContext(),"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
                     }
 
                     Date currentDateTime = calendar.getTime();
-                    String date_text = new SimpleDateFormat("yyyy/MM/dd/EEE hh시-mm분 ", Locale.getDefault()).format(currentDateTime);
+                    String date_text = new SimpleDateFormat("yyyy년MM월dd일 hh시mm분 ", Locale.getDefault()).format(currentDateTime);
                     Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
@@ -134,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
                     diaryNotification(sharedPreferences.getLong(selected,0),position,false );
                     SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                    Log.d("test", "delete test = "+ selected);
                     editor.putLong(selected, 0);
                     editor.apply();
                 }else{
@@ -157,26 +152,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void showAlarmList(){
-        Log.d("test", "showAlarmList Test");
         SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        String hour_t, min_t;
-        long dayint = 24*60*60*1000;
-        long hourint = 60*60*1000;
-        long minuteint = 60*1000;
-        long day, hours, mins, save;
         textView.setText("");
         for (int i = 0;i < 5; i++) {
-            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-                save = sharedPreferences.getLong(String.valueOf(i), 0);
-                day = save / dayint;
-                save %= dayint;
-                hours = save / hourint;
-                save %= hourint;
-                hour_t = String.valueOf(hours);
-                mins = save / minuteint;
-                save %= minuteint;
-                min_t = String.valueOf(mins);
-                textView.append(i+1 + " : " + hour_t + "시" + min_t + "분");
+            Long timeMillis = sharedPreferences.getLong(String.valueOf(i), 0);
+            if (timeMillis != 0) {
+                String pattern = "MM월dd일 HH시mm분";
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+                String date = (String)formatter.format(new Timestamp(timeMillis));
+                textView.append(i+1 + " : " + date);
             }
             if(i!=4){
                 textView.append("\n");
@@ -196,19 +180,15 @@ public class MainActivity extends AppCompatActivity {
 
     void diaryNotification(Long TimeInMillis, int requestCode, boolean CheckNotify)
     {
-        Boolean dailyNotify = CheckNotify;
-
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class); // alarmReceiver 주는 인텐트
         alarmIntent.putExtra("requestCode", requestCode);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        //Intent intentToService = new Intent(this, ForeService.class);
-
         // 사용자가 매일 알람을 허용했다면
-        if (dailyNotify) {
+        if (CheckNotify) {
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent);
 
@@ -224,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else { //Disable Daily Notifications
-            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
+            if (PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0) != null && alarmManager != null) {
                 alarmManager.cancel(pendingIntent);
                 //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
             }

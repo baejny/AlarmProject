@@ -16,7 +16,6 @@ public class MediaPlayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("test", "MediaPlayActivity Test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mediaplay);
 
@@ -40,5 +39,10 @@ public class MediaPlayActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("test","MediaplayActivity Stop");
     }
 }

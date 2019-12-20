@@ -38,14 +38,14 @@
         android:text="REMOVE TIME"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.722"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="124dp"
-        android:layout_height="139dp"
+        android:layout_width="158dp"
+        android:layout_height="134dp"
         android:layout_marginStart="71dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="98dp"
