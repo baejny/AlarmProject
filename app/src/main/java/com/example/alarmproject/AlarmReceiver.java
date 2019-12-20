@@ -84,13 +84,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 자동 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
 
-        MainActivity activity = (MainActivity)MainActivity.F_Activity;
-
         Intent temp = new Intent(context, MediaPlayActivity.class);
         PendingIntent sender =  PendingIntent.getActivity(context, 0 , temp, PendingIntent.FLAG_ONE_SHOT);
         try{
             sender.send();
-            activity.finish();
         }catch (PendingIntent.CanceledException e){
             e.printStackTrace();
         }
