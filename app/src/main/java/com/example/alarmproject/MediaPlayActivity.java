@@ -39,4 +39,9 @@ public class MediaPlayActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("test","MediaplayActivity Stop");
+    }
 }

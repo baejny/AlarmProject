@@ -8,8 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import android.app.Activity;
 
 import androidx.core.app.NotificationCompat;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,5 +89,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         }catch (PendingIntent.CanceledException e){
             e.printStackTrace();
         }
+
+        temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(temp);
+        Log.d("test", "----------------------------------------");
     }
 }

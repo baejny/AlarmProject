@@ -23,7 +23,6 @@ import android.app.Activity;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
 
         picker=(TimePicker)findViewById(R.id.timePicker);
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         showAlarmList();
         // 스피너 초기화
         makeSpinnerList();
+
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -181,18 +182,17 @@ public class MainActivity extends AppCompatActivity {
     {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class); // alarmReceiver 주는 인텐트
         alarmIntent.putExtra("requestCode", requestCode);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // 사용자가 매일 알람을 허용했다면
         if (CheckNotify) {
             if (alarmManager != null) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis,
-                        AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, TimeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, TimeInMillis, pendingIntent);
                 }
             }
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else { //Disable Daily Notifications
-            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
+            if (PendingIntent.getBroadcast(this, requestCode, alarmIntent, 0) != null && alarmManager != null) {
                 alarmManager.cancel(pendingIntent);
                 //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
             }
