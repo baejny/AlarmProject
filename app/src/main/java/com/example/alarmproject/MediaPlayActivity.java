@@ -34,7 +34,6 @@ public class MediaPlayActivity extends AppCompatActivity {
                 mp.stop();
                 mp.release();
                 Intent intent = new Intent(MediaPlayActivity.this, MainActivity.class);
-
                 startActivity(intent);
                 finish();
             }

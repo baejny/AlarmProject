@@ -38,15 +38,11 @@ public class MainActivity extends AppCompatActivity {
     Button btn_remove;
     Spinner spinner;
 
-    public static Activity F_Activity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        F_Activity = MainActivity.this;
 
         Log.d("test", "alarmCount test = " + String.valueOf(getAlarmCount()));
 
@@ -189,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         alarmIntent.putExtra("requestCode", requestCode);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
 
         // 사용자가 매일 알람을 허용했다면
         if (CheckNotify) {
