@@ -24,8 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
-
-    Intent alarmIntent;
     AlarmManager alarmManager;
 
     int alarmCount;
@@ -36,22 +34,24 @@ public class AlarmMethod{
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
     private AlarmListener mListener;
+    AlarmMethod(Context context, SharedPreferences sharedPreferences){
+        this.context = context;
+        this.sharedPreferences = sharedPreferences;;
+        this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        PackageManager pm = this.context.getPackageManager();
+        ComponentName receiver = new ComponentName(this.context, DeviceBootReceiver.class);
+        pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    //리스너 부착
     public void setListener(AlarmListener listener){
         mListener = listener;
         mListener.onList(make_list());
     }
 
-    AlarmMethod(Context context, SharedPreferences sharedPreferences){
-        this.context = context;
-        this.sharedPreferences = sharedPreferences;
-        this.alarmIntent = new Intent(context, AlarmReceiver.class);
-        this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Log.d("test", "AlarmMethod Constructed");
-        Log.d("test", "AlarmCount = " + String.valueOf(getAlarmCount()));
-    }
-
     //알람 등록
-    void alarm_insert(int hour, int minute){
+    void alarm_insert(int hour, int minute, String mediaNum){
+        Log.d("Insert Spinner number", mediaNum);
         String str_id;
         alarmCount = getAlarmCount();
         if (alarmCount < 5) {
@@ -75,7 +75,7 @@ public class AlarmMethod{
             }
 
             Date currentDateTime = calendar.getTime();
-            String date_text = new SimpleDateFormat("yyyy년MM월dd일 hh시mm분 ", Locale.getDefault()).format(currentDateTime);
+            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
             Toast.makeText(context, date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -88,10 +88,12 @@ public class AlarmMethod{
             databaseReference.child(str_id).child("minute").setValue(minute);
 
             Long millis = calendar.getTimeInMillis();
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, 0);
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.putExtra("alarmPointer", alarmPointer);
+            alarmIntent.putExtra("mediaSelect", mediaNum);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
                 }
@@ -109,7 +111,10 @@ public class AlarmMethod{
     void alarm_delete(int SelectedItemPosition){
         alarmCount = getAlarmCount();
         if(alarmCount > 0){
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.putExtra("alarmPointer", SelectedItemPosition);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0);
+            Log.d("Delete Spinner number", String.valueOf(SelectedItemPosition));
             if (PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0) != null && alarmManager != null) {
                 alarmManager.cancel(pendingIntent);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -133,7 +138,7 @@ public class AlarmMethod{
                 count++;
             }
         }
-        Toast.makeText(context, "[재부팅]" + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
     String make_list(){
