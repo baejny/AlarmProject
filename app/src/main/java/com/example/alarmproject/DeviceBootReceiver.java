@@ -28,6 +28,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             final AlarmMethod AM_Boot = new AlarmMethod(context, sharedPreferences);
             // on device boot complete, reset the alarm
             AM_Boot.alarm_boot();
+        } else if ("TEST".equals(intent.getAction())){
+            Log.d("test", "******************************************************");
         }
     }
 }
