@@ -83,6 +83,7 @@ public class AlarmMethod{
             alarmIntent.putExtra("alarmPointer", alarmPointer);
             alarmIntent.putExtra("mediaSelect", mediaNum);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             if (alarmManager != null) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
