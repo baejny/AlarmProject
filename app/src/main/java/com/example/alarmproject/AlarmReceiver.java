@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             String channelName ="매일 알람 채널";
             String description = "매일 정해진 시간에 알람합니다.";
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
 
             NotificationChannel channel = new NotificationChannel("default", channelName, importance);
             channel.setDescription(description);
@@ -70,8 +70,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             am.alarm_change(alarmPointer);
 
             Intent temp = new Intent(context, MediaPlayActivity.class);
-            temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
             temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
             context.startActivity(temp);
         }
     }

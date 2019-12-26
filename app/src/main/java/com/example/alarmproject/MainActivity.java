@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     }
 
     void makeSpinnerTimeList(){
-        String[] facilityList = {"M","은하","E"};
+        String[] facilityList = {"은하","시완","E"};
         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,

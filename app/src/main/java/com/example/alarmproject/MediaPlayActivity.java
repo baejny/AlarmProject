@@ -26,10 +26,10 @@ public class MediaPlayActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("mediaSelect");
         Log.d("Mediaplay Spin number", str);
-        if("Siwan".equals(str)){
-            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.morning);
-        }else if("Eunha".equals(str)){
-            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.morning);
+        if("은하".equals(str)){
+            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.eunha);
+        }else if("시완".equals(str)){
+            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.siwan);
         }
         mp.start();
 
