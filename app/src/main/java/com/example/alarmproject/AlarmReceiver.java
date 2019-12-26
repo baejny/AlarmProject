@@ -68,7 +68,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationManager.notify(1234, builder.build());
             // 다음날 같은 시간으로 설정 및 Preference에 설정한 값 저장
             AlarmMethod am = new AlarmMethod(context, context.getSharedPreferences("daily alarm", MODE_PRIVATE));
-            //am.alarm_change(alarmPointer);
+            am.alarm_change(alarmPointer);
 
             Intent temp = new Intent(context, MediaPlayActivity.class);
             temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

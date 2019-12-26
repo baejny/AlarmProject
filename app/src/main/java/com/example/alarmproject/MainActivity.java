@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     TextView textView;
     Button btn_save;
     Button btn_remove;
+    Button btn_removeAll;
     Spinner spinner;
     Spinner TimeSpinner;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         textView = (TextView)findViewById(R.id.textView);
         btn_save = (Button) findViewById(R.id.button_save);
         btn_remove = (Button) findViewById(R.id.button_remove);
+        btn_removeAll = (Button) findViewById(R.id.button_removeAll);
 
         // 스피너 초기화
         makeSpinnerList();
@@ -75,7 +77,12 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         });
 
         // 전체 초기화
-
+        btn_removeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                am.alarm_deleteAll();
+            }
+        });
     }
 
     void makeSpinnerList(){

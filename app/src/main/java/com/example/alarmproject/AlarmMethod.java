@@ -156,6 +156,31 @@ public class AlarmMethod{
         }
     }
 
+    //알람 삭제
+    void alarm_deleteAll(){
+        alarmCount = getAlarmCount();
+        if(alarmCount > 0){
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            for(int i=0; i<5; i++){
+                alarmIntent.putExtra("alarmPointer", i);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, 0);
+                if (PendingIntent.getBroadcast(context, i, alarmIntent, 0) != null && alarmManager != null) {
+                    alarmManager.cancel(pendingIntent);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putLong(String.valueOf(i), 0);
+                    editor.putString(String.valueOf(i+10), null);
+                    editor.apply();
+                }
+            }
+        }else{
+            Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        if(mListener != null){
+            mListener.onList(make_list());
+        }
+    }
+
     //디바이스 부팅시 알람 초기화
     void alarm_boot(){
         int count = 0;
