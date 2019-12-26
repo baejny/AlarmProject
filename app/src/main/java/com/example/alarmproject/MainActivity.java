@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     Spinner spinner;
     Spinner TimeSpinner;
 
+    SharedPreferences sharedPreferences;
+    AlarmMethod am;
+
     @Override
     public void onList(String msg) {
         ((TextView)findViewById(R.id.textView)).setText(msg);
@@ -38,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        final AlarmMethod am = new AlarmMethod(this, sharedPreferences);
+        sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+        am = new AlarmMethod(this, sharedPreferences);
 
         picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
@@ -90,5 +93,11 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
                 facilityList);
         TimeSpinner.setAdapter(adapter);
         TimeSpinner.setSelection(0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((TextView)findViewById(R.id.textView)).setText(am.make_list());
     }
 }

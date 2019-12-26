@@ -19,7 +19,11 @@ import androidx.core.app.NotificationCompat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AlarmReceiver extends BroadcastReceiver {
+
+    int alarmPointer;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,7 +31,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingI = PendingIntent.getActivity(context, intent.getIntExtra("alarmPointer", 0 ), notificationIntent, 0);
+        alarmPointer = intent.getIntExtra("alarmPointer", 0 );
+        PendingIntent pendingI = PendingIntent.getActivity(context, alarmPointer, notificationIntent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
         //OREO API 26 이상에서는 채널 필요
@@ -60,18 +65,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (notificationManager != null) {
             // 노티피케이션 동작시킴
             notificationManager.notify(1234, builder.build());
-            Calendar nextNotifyTime = Calendar.getInstance();
-            // 내일 같은 시간으로 알람시간 결정
-            nextNotifyTime.add(Calendar.DATE, 1);
-            nextNotifyTime.add(Calendar.MILLISECOND, 0);
-            // Preference에 설정한 값 저장
+            // 다음날 같은 시간으로 설정 및 Preference에 설정한 값 저장
+            AlarmMethod am = new AlarmMethod(context, context.getSharedPreferences("daily alarm", MODE_PRIVATE));
+            am.alarm_change(alarmPointer);
 
-            if (!nextNotifyTime.before(Calendar.getInstance())) {
-                Intent temp = new Intent(context, MediaPlayActivity.class);
-                temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
-                temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(temp);
-            }
+            Intent temp = new Intent(context, MediaPlayActivity.class);
+            temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
+            temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(temp);
         }
     }
 }

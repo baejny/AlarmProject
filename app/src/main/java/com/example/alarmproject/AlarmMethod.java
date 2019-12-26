@@ -64,7 +64,7 @@ public class AlarmMethod{
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            if (calendar.before(Calendar.getInstance())) {
+            if (calendar.before(Calendar.getInstance()))  {
                 calendar.add(Calendar.DATE, 1);
                 Toast.makeText(context,"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
             }
@@ -91,6 +91,40 @@ public class AlarmMethod{
             }
         }else{
             Toast.makeText(context, "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        if(mListener != null){
+            mListener.onList(make_list());
+        }
+    }
+
+    //알란 변경 (알람 실행 후 내일 같은 시간으로 설정)
+    void alarm_change(int alarmPointer){
+
+        Calendar nextNotifyTime = Calendar.getInstance();
+        nextNotifyTime.setTimeInMillis(System.currentTimeMillis());
+        nextNotifyTime.set(Calendar.SECOND, 0);
+        nextNotifyTime.set(Calendar.MILLISECOND, 0);
+
+        //하루 증가
+        nextNotifyTime.add(Calendar.DATE, 1);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String mediaNum = sharedPreferences.getString(String.valueOf(alarmPointer+10), null);
+        Long Millis = nextNotifyTime.getTimeInMillis();
+        editor.putLong(String.valueOf(alarmPointer), Millis);
+        editor.putString(String.valueOf(alarmPointer+10), mediaNum);
+        editor.apply();
+
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        alarmIntent.putExtra("alarmPointer", alarmPointer);
+        alarmIntent.putExtra("mediaSelect", mediaNum);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmPointer, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Millis, AlarmManager.INTERVAL_DAY, pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Millis, pendingIntent);
+            }
         }
 
         if(mListener != null){
