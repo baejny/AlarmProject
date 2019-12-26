@@ -10,62 +10,59 @@
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="61dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="78dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="18dp"
         android:timePickerMode="spinner"
-        app:layout_constraintBottom_toTopOf="@+id/button_remove"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toStartOf="@+id/button_save"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="108dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="43dp"
-        android:layout_marginEnd="32dp"
+        android:layout_height="107dp"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="22dp"
         android:gravity="center_horizontal"
         android:lines="5"
         android:maxLines="5"
-        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        app:layout_constraintEnd_toStartOf="@+id/button_removeAll"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+        app:layout_constraintTop_toTopOf="@+id/spinner" />
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginBottom="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_remove"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="140dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="53dp"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/button_save" />
+        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
     <Button
         android:id="@+id/button_remove"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="215dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="45dp"
         android:text="REMOVE TIME"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="@+id/button_removeAll"
+        app:layout_constraintStart_toStartOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="@+id/spinner" />
 
     <Button
         android:id="@+id/button_save"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="74dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="30dp"
         android:text="SAVE TIME"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintBottom_toBottomOf="@+id/timePicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/timePicker"
         app:layout_constraintTop_toBottomOf="@+id/spinner2" />
@@ -73,36 +70,34 @@
     <Spinner
         android:id="@+id/spinner2"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="137dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_save"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="38dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="29dp"
+        app:layout_constraintBottom_toBottomOf="@+id/timePicker"
+        app:layout_constraintEnd_toEndOf="@+id/button_save"
         app:layout_constraintStart_toEndOf="@+id/timePicker"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/timePicker" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="21dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="14dp"
         android:text="알람 선택"
         app:layout_constraintBottom_toTopOf="@+id/spinner2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/timePicker" />
+        app:layout_constraintStart_toStartOf="@+id/spinner2" />
 
     <Button
         android:id="@+id/button_removeAll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="179dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
         android:text="REMOVE ALL"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/button_remove"
-        app:layout_constraintStart_toStartOf="@+id/button_remove"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/button_remove" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

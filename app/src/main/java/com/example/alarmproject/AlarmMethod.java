@@ -100,7 +100,6 @@ public class AlarmMethod{
 
     //알란 변경 (알람 실행 후 내일 같은 시간으로 설정)
     void alarm_change(int alarmPointer){
-
         Calendar nextNotifyTime = Calendar.getInstance();
         nextNotifyTime.setTimeInMillis(System.currentTimeMillis());
         nextNotifyTime.set(Calendar.SECOND, 0);

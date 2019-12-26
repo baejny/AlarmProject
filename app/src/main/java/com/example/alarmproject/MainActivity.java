@@ -2,6 +2,12 @@ package com.example.alarmproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     SharedPreferences sharedPreferences;
     AlarmMethod am;
 
+    private BluetoothAdapter mBluetoothAdapter;
+
     @Override
     public void onList(String msg) {
         ((TextView)findViewById(R.id.textView)).setText(msg);
@@ -42,6 +50,24 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        /* Scan 조건 체크 */
+        // REQUEST BLE ENABLE
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        }
+        // REQUEST FINE LOCATION PERMISSION
+        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1003);
+        }
+        Intent intent = getIntent();
+        if(intent.getIntExtra("bluetoothFind", 0) != 1){
+            Intent bluetoothIntent = new Intent(this, BluetoothService.class);
+            startService(bluetoothIntent);
+            //finish();
+        }
         sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
         am = new AlarmMethod(this, sharedPreferences);
 
