@@ -82,10 +82,9 @@ public class AlarmMethod{
             editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
             editor.apply();
 
-            str_id = String.valueOf(hour).concat(String.valueOf(minute)); // 나중에 코드로 바꾸기
-
-            databaseReference.child(str_id).child("hour").setValue(hour);
-            databaseReference.child(str_id).child("minute").setValue(minute);
+            //str_id = String.valueOf(hour).concat(String.valueOf(minute));
+            //databaseReference.child(str_id).child("hour").setValue(hour);
+            //databaseReference.child(str_id).child("minute").setValue(minute);
 
             Long millis = calendar.getTimeInMillis();
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);

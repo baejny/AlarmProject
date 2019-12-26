@@ -15,10 +15,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Register extends AppCompatActivity {
     private EditText editTextID;
-    private EditText editTextPW;
     Button btn;
 
-    String id, pw, code;
+    String id, code;
     Random rnd;
     StringBuffer buf = new StringBuffer();
 
@@ -32,7 +31,6 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_join);
 
         editTextID = (EditText) findViewById(R.id.editTextID);
-        editTextPW = (EditText) findViewById(R.id.editTextPW);
         btn = (Button) findViewById(R.id.button);
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -55,11 +53,8 @@ public class Register extends AppCompatActivity {
                 ((TextView)findViewById(R.id.codeView)).setText(code);
 
                 id = editTextID.getText().toString();
-                pw = editTextPW.getText().toString();
 
                 databaseReference.child(code).child("ID").setValue(id);
-                databaseReference.child(code).child("PW").setValue(pw);
-
             }
         });
     }

@@ -23,16 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 public class AlarmMain extends AppCompatActivity {
 
     private EditText editTextID;
-    private EditText editTextPW;
     private EditText editTextCode;
     Button login_btn, reg_btn, chk_btn;
 
-    String id, pw, code; // editText 입력된 값
-    String dbid, dbpw, dbcode;
-    Register reg;
+    String id, code; // editText 입력된 값
+    String dbid;
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -40,26 +39,17 @@ public class AlarmMain extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         editTextID = (EditText) findViewById(R.id.editTextID);
-        editTextPW = (EditText) findViewById(R.id.editTextPW);
         editTextCode = (EditText) findViewById(R.id.editTextCode);
         login_btn = (Button) findViewById(R.id.button);
         reg_btn = (Button) findViewById(R.id.registerbtn);
         chk_btn = (Button) findViewById(R.id.buttonchk);
 
-        code = editTextCode.getText().toString();
-
-        databaseReference.child(code).addValueEventListener(new ValueEventListener() {
+        chk_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                reg = dataSnapshot.getValue(Register.class);
+            public void onClick(View arg0) {
+                code = editTextCode.getText().toString();
 
-                Log.d("test id",dbid);
-                Log.d("test pw",dbpw);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                getFirebasecode();
             }
         });
 
@@ -67,12 +57,8 @@ public class AlarmMain extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 id = editTextID.getText().toString();
-                pw = editTextPW.getText().toString();
 
-                dbid = databaseReference.child(code).child("ID").getKey();
-                dbpw = databaseReference.child(code).child("PW").getKey();
-
-                if(dbid == id && dbpw == pw){
+                if(dbid == id){
                     // MainActivity로 이동
                     Intent temp = new Intent(AlarmMain.this, MainActivity.class);
                     temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -93,6 +79,25 @@ public class AlarmMain extends AppCompatActivity {
                 AlarmMain.this.startActivity(temp);
             }
         });
+    }
 
+    public void getFirebasecode(){
+        databaseReference.child(code).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    AlarmMain tmp = postSnapshot.getValue(AlarmMain.class);
+                    dbid = tmp.id;
+                    Log.d("Firebase",dbid);
+                }
+
+//                Log.d("test id",dbid);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AlarmMain.this, "No number", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
