@@ -36,7 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             String channelName ="매일 알람 채널";
             String description = "매일 정해진 시간에 알람합니다.";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_LOW;
 
             NotificationChannel channel = new NotificationChannel("default", channelName, importance);
             channel.setDescription(description);
@@ -58,7 +58,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // notification 동작 후 다음 날 같은 시간으로 저장후 toast
         if (notificationManager != null) {
-            Log.d("test", "notification Test1");
             // 노티피케이션 동작시킴
             notificationManager.notify(1234, builder.build());
             Calendar nextNotifyTime = Calendar.getInstance();
@@ -66,14 +65,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             nextNotifyTime.add(Calendar.DATE, 1);
             nextNotifyTime.add(Calendar.MILLISECOND, 0);
             // Preference에 설정한 값 저장
-            //Toast.makeText(context.getApplicationContext(),"intent test = " + intent.getIntExtra("alarmPointer", 0 ), Toast.LENGTH_SHORT).show();
 
-
+            if (!nextNotifyTime.before(Calendar.getInstance())) {
+                Intent temp = new Intent(context, MediaPlayActivity.class);
+                temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
+                temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(temp);
+            }
         }
-        Intent temp = new Intent(context, MediaPlayActivity.class);
-        temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
-        temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.d("test", String.valueOf(intent.getStringExtra("mediaSelect")));
-        context.startActivity(temp);
     }
 }

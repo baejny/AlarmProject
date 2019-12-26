@@ -29,7 +29,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         if("M".equals(str)){
             mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.morning);
             mp.start();
-        }else if("A".equals(str)){
+        }else if("은하".equals(str)){
             mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.alarm);
             mp.start();
         }else{
@@ -58,9 +58,4 @@ public class MediaPlayActivity extends AppCompatActivity {
         //Log.d("test","MediaplayActivity Stop");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //Log.d("test","MediaplayActivity Destroy");
-    }
 }

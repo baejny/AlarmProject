@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
@@ -123,27 +124,27 @@ public class AlarmMethod{
 
     //디바이스 부팅시 알람 초기화
     void alarm_boot(){
-//        int count = 0;
-//        for (int i = 0; i < 5; i++) {
-//            Log.d("test", "alarm_boot test = "+i);
-//            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-//                count++;
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTimeInMillis(sharedPreferences.getLong(String.valueOf(i),0));
-//                Long millis = calendar.getTimeInMillis();
-//                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-//                alarmIntent.putExtra("alarmPointer", i);
-//                alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i), null));
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                if (alarmManager != null) {
-//                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
-//                    }
-//                }
-//            }
-//        }
-//        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+        int count = 0;
+        for (int i = 0; i < 5; i++) {
+            Long millis = sharedPreferences.getLong(String.valueOf(i), 0);
+            if (millis != 0) {
+                Log.d("test", "boot test = " + i);
+                count++;
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(sharedPreferences.getLong(String.valueOf(i),0));
+                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+                alarmIntent.putExtra("alarmPointer", i);
+                alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i+10), null));
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                if (alarmManager != null) {
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
+                    }
+                }
+            }
+        }
+        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
     //sharedPreferences에 값 변동시 Main의 List 재설정
