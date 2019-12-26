@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
                 am.alarm_delete(spinner.getSelectedItemPosition());
             }
         });
+
+        // 전체 초기화
+
     }
 
     void makeSpinnerList(){
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     }
 
     void makeSpinnerTimeList(){
-        String[] facilityList = {"은하","시완","E"};
+        String[] facilityList = {"은하","시완"};
         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,

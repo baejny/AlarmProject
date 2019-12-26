@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.app.Activity;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.IntentCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             String channelName ="매일 알람 채널";
             String description = "매일 정해진 시간에 알람합니다.";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
 
             NotificationChannel channel = new NotificationChannel("default", channelName, importance);
             channel.setDescription(description);
@@ -67,10 +68,11 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationManager.notify(1234, builder.build());
             // 다음날 같은 시간으로 설정 및 Preference에 설정한 값 저장
             AlarmMethod am = new AlarmMethod(context, context.getSharedPreferences("daily alarm", MODE_PRIVATE));
-            am.alarm_change(alarmPointer);
+            //am.alarm_change(alarmPointer);
 
             Intent temp = new Intent(context, MediaPlayActivity.class);
-            temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            temp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            temp.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
             context.startActivity(temp);
         }
