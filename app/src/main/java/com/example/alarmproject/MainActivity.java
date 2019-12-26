@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        final AlarmMethod AM = new AlarmMethod(this, sharedPreferences);
+        final AlarmMethod am = new AlarmMethod(this, sharedPreferences);
 
         picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         makeSpinnerList();
         makeSpinnerTimeList();
         // 리스너 초기화
-        AM.setListener(this);
+        am.setListener(this);
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                AM.alarm_insert(picker.getCurrentHour(), picker.getCurrentMinute(), TimeSpinner.getSelectedItem().toString());
+                am.alarm_insert(picker.getCurrentHour(), picker.getCurrentMinute(), TimeSpinner.getSelectedItem().toString());
             }
         });
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                AM.alarm_delete(spinner.getSelectedItemPosition());
+                am.alarm_delete(spinner.getSelectedItemPosition());
             }
         });
     }
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     }
 
     void makeSpinnerTimeList(){
-        String[] facilityList = {"M","A","E"};
+        String[] facilityList = {"M","은하","E"};
         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,

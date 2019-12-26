@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,16 +21,32 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class DeviceBootReceiver extends BroadcastReceiver {
 
+    SharedPreferences sharedPreferences;
+    AlarmManager alarmManager;
+    Intent alarmIntent;
+    PendingIntent pendingIntent;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
-            Log.d("test", "BootReceiver Test");
-            SharedPreferences sharedPreferences = context.getSharedPreferences("daily alarm", MODE_PRIVATE);
-            final AlarmMethod AM_Boot = new AlarmMethod(context, sharedPreferences);
             // on device boot complete, reset the alarm
-            AM_Boot.alarm_boot();
-        } else if ("TEST".equals(intent.getAction())){
-            Log.d("test", "******************************************************");
+            sharedPreferences = context.getSharedPreferences("daily alarm", MODE_PRIVATE);
+            alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            int count = 0;
+            for (int i = 0; i < 5; i++) {
+                Long millis = sharedPreferences.getLong(String.valueOf(i), 0);
+                if (millis != 0) {
+                    count++;
+                    alarmIntent = new Intent(context, AlarmReceiver.class);
+                    alarmIntent.putExtra("alarmPointer", i);
+                    alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i+10), null));
+                    pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    if (alarmManager != null) {
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
+                    }
+                }
+            }
+            Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }

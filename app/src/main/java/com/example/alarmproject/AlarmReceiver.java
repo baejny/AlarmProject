@@ -64,6 +64,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Calendar nextNotifyTime = Calendar.getInstance();
             // 내일 같은 시간으로 알람시간 결정
             nextNotifyTime.add(Calendar.DATE, 1);
+            nextNotifyTime.add(Calendar.MILLISECOND, 0);
             // Preference에 설정한 값 저장
             //Toast.makeText(context.getApplicationContext(),"intent test = " + intent.getIntExtra("alarmPointer", 0 ), Toast.LENGTH_SHORT).show();
 
@@ -72,7 +73,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent temp = new Intent(context, MediaPlayActivity.class);
         temp.putExtra("mediaSelect", intent.getStringExtra("mediaSelect"));
         temp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.d("Mediaplay Receiver", String.valueOf(intent.getStringExtra("mediaSelect")));
+        Log.d("test", String.valueOf(intent.getStringExtra("mediaSelect")));
         context.startActivity(temp);
     }
 }

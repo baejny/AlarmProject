@@ -29,14 +29,10 @@ public class AlarmMethod{
     int alarmCount;
     int alarmPointer;
 
-    // firebase 에 데이터를 읽고 쓰기 위해서는 DatabaseReference를 사용해야 함. 파이어 베이스와 연결
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-
     private AlarmListener mListener;
     AlarmMethod(Context context, SharedPreferences sharedPreferences){
         this.context = context;
-        this.sharedPreferences = sharedPreferences;;
+        this.sharedPreferences = sharedPreferences;
         this.alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         PackageManager pm = this.context.getPackageManager();
         ComponentName receiver = new ComponentName(this.context, DeviceBootReceiver.class);
@@ -51,8 +47,6 @@ public class AlarmMethod{
 
     //알람 등록
     void alarm_insert(int hour, int minute, String mediaNum){
-        Log.d("Insert Spinner number", mediaNum);
-        String str_id;
         alarmCount = getAlarmCount();
         if (alarmCount < 5) {
             for (int i = 0; i < 5; i++) {
@@ -80,12 +74,8 @@ public class AlarmMethod{
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
+            editor.putString(String.valueOf(alarmPointer+10), mediaNum);
             editor.apply();
-
-            str_id = String.valueOf(hour).concat(String.valueOf(minute)); // 나중에 코드로 바꾸기
-
-            databaseReference.child(str_id).child("hour").setValue(hour);
-            databaseReference.child(str_id).child("minute").setValue(minute);
 
             Long millis = calendar.getTimeInMillis();
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -119,6 +109,7 @@ public class AlarmMethod{
                 alarmManager.cancel(pendingIntent);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong(String.valueOf(SelectedItemPosition), 0);
+                editor.putString(String.valueOf(SelectedItemPosition+10), null);
                 editor.apply();
             }
         }else{
@@ -132,15 +123,30 @@ public class AlarmMethod{
 
     //디바이스 부팅시 알람 초기화
     void alarm_boot(){
-        int count = 0;
-        for (int i = 0; i < 5; i++) {
-            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-                count++;
-            }
-        }
-        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+//        int count = 0;
+//        for (int i = 0; i < 5; i++) {
+//            Log.d("test", "alarm_boot test = "+i);
+//            if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
+//                count++;
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTimeInMillis(sharedPreferences.getLong(String.valueOf(i),0));
+//                Long millis = calendar.getTimeInMillis();
+//                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+//                alarmIntent.putExtra("alarmPointer", i);
+//                alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i), null));
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                if (alarmManager != null) {
+//                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
+//                    }
+//                }
+//            }
+//        }
+//        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
+    //sharedPreferences에 값 변동시 Main의 List 재설정
     String make_list(){
         String msg = "";
         for (int i = 0;i < 5; i++) {
@@ -158,6 +164,7 @@ public class AlarmMethod{
         return msg;
     }
 
+    //sharedPreferences에 저장된 알람 갯수 계산
     int getAlarmCount(){
         int result = 0;
         for(int i=0; i<5; i++){

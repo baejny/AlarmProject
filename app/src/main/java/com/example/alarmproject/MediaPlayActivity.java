@@ -44,6 +44,7 @@ public class MediaPlayActivity extends AppCompatActivity {
                 mp.stop();
                 mp.release();
                 Intent intent = new Intent(MediaPlayActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();
             }
