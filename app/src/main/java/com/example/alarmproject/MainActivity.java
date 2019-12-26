@@ -3,6 +3,7 @@ package com.example.alarmproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.content.Intent;
+import android.widget.Toast;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -24,8 +25,12 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     TextView textView;
     Button btn_save;
     Button btn_remove;
+    Button btn_removeAll;
     Spinner spinner;
     Spinner TimeSpinner;
+
+    SharedPreferences sharedPreferences;
+    AlarmMethod am;
 
     @Override
     public void onList(String msg) {
@@ -37,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        final AlarmMethod AM = new AlarmMethod(this, sharedPreferences);
+        sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+        am = new AlarmMethod(this, sharedPreferences);
 
         picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
@@ -47,18 +52,19 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         textView = (TextView)findViewById(R.id.textView);
         btn_save = (Button) findViewById(R.id.button_save);
         btn_remove = (Button) findViewById(R.id.button_remove);
+        btn_removeAll = (Button) findViewById(R.id.button_removeAll);
 
         // 스피너 초기화
         makeSpinnerList();
         makeSpinnerTimeList();
         // 리스너 초기화
-        AM.setListener(this);
+        am.setListener(this);
 
         // 등록
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                AM.alarm_insert(picker.getCurrentHour(), picker.getCurrentMinute(), TimeSpinner.getSelectedItem().toString());
+                am.alarm_insert(picker.getCurrentHour(), picker.getCurrentMinute(), TimeSpinner.getSelectedItem().toString());
             }
         });
 
@@ -66,7 +72,15 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                AM.alarm_delete(spinner.getSelectedItemPosition());
+                am.alarm_delete(spinner.getSelectedItemPosition());
+            }
+        });
+
+        // 전체 초기화
+        btn_removeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                am.alarm_deleteAll();
             }
         });
     }
@@ -82,12 +96,18 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
     }
 
     void makeSpinnerTimeList(){
-        String[] facilityList = {"M","A","E"};
+        String[] facilityList = {"은하","시완"};
         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 facilityList);
         TimeSpinner.setAdapter(adapter);
         TimeSpinner.setSelection(0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((TextView)findViewById(R.id.textView)).setText(am.make_list());
     }
 }
