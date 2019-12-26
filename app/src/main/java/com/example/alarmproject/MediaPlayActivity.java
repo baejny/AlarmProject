@@ -26,16 +26,12 @@ public class MediaPlayActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("mediaSelect");
         Log.d("Mediaplay Spin number", str);
-        if("M".equals(str)){
+        if("Siwan".equals(str)){
             mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.morning);
-            mp.start();
-        }else if("은하".equals(str)){
-            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.alarm);
-            mp.start();
-        }else{
-            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.evening);
-            mp.start();
+        }else if("Eunha".equals(str)){
+            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.morning);
         }
+        mp.start();
 
         Button btn_stop = findViewById(R.id.button_stop);
         btn_stop.setOnClickListener(new View.OnClickListener() {
