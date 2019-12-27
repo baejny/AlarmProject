@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 import android.app.Activity;
+import android.os.PowerManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.IntentCompat;
@@ -27,6 +28,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+//        PowerManager powerManager;
+//        PowerManager.WakeLock wakeLock;
+//        powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+//        wakeLock = powerManager.newWakeLock( PowerManager.ACQUIRE_CAUSES_WAKEUP, "mytag:MyWakeLock");
+//        wakeLock.acquire(); // WakeLock 깨우기
+//        wakeLock.release();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(context, MainActivity.class);

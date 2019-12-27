@@ -22,7 +22,6 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity">
-
         </activity>
 
         <receiver android:name=".DeviceBootReceiver"
@@ -36,9 +35,10 @@
         <activity android:name=".MediaPlayActivity"></activity>
         <activity android:name=".BluetoothClass">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

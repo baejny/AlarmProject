@@ -11,24 +11,36 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.net.Inet4Address;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Iterator;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
     AlarmManager alarmManager;
+    HashMap<Integer, String> hm = new HashMap<>();
+
+    private DatabaseReference mDatabase;
 
     int alarmCount;
     int alarmPointer;
+    int alarmListCount;
 
     private AlarmListener mListener;
     AlarmMethod(Context context, SharedPreferences sharedPreferences){
@@ -50,7 +62,8 @@ public class AlarmMethod{
     void alarm_insert(int hour, int minute, String mediaNum){
         alarmCount = getAlarmCount();
         if (alarmCount < 5) {
-            for (int i = 0; i < 5; i++) {
+            int i;
+            for (i = 0; i < 5; i++) {
                 if (sharedPreferences.getLong(String.valueOf(i), 0) == 0) {
                     alarmPointer = i;
                     break;
@@ -68,6 +81,9 @@ public class AlarmMethod{
                 calendar.add(Calendar.DATE, 1);
                 Toast.makeText(context,"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
             }
+
+            // hashmap에 시간+분, mediaNum 저장
+            hm.put(i+1, mediaNum+(hour*60+minute)); // 번호, 이름/시간
 
             Date currentDateTime = calendar.getTime();
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
@@ -142,6 +158,8 @@ public class AlarmMethod{
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0);
             Log.d("Delete Spinner number", String.valueOf(SelectedItemPosition));
             if (PendingIntent.getBroadcast(context, SelectedItemPosition, alarmIntent, 0) != null && alarmManager != null) {
+                Log.d("delspinner", String.valueOf(SelectedItemPosition));
+                hm.remove(SelectedItemPosition+1);
                 alarmManager.cancel(pendingIntent);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putLong(String.valueOf(SelectedItemPosition), 0);
@@ -157,7 +175,7 @@ public class AlarmMethod{
         }
     }
 
-    //알람 삭제
+    //전체 알람 삭제
     void alarm_deleteAll(){
         alarmCount = getAlarmCount();
         if(alarmCount > 0){
@@ -205,6 +223,53 @@ public class AlarmMethod{
             }
         }
         Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    // hashmap 시간 분 가져와서 DB에 저장
+    void save_list(String list_name){
+        if(alarmListCount<10) {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            alarmListCount++;
+            for (int key : hm.keySet()) {
+                String name = hm.get(key).substring(0, 2);
+                String time = hm.get(key).substring(2);
+                mDatabase.child(list_name).push().setValue(key);
+                mDatabase.child(list_name).child(String.valueOf(key)).child("hour").setValue(Integer.valueOf(time) / 60);
+                mDatabase.child(list_name).child(String.valueOf(key)).child("minute").setValue(Integer.valueOf(time) % 60);
+                mDatabase.child(list_name).child(String.valueOf(key)).child("mediaNumber").setValue(name);
+                Log.d("hashmap_Input", key + hm.get(key));
+            }
+        }
+        else{
+            Toast.makeText(context, "더 이상 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void open_list(String SelectedItemPosition){
+        alarm_deleteAll();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child(SelectedItemPosition).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int i=1;
+                int hour=0, minute=0;
+                String media=null;
+                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+                while (child.hasNext()) {
+                    if(String.valueOf(i).equals(child.next().getKey())){
+                        hour = (Integer)dataSnapshot.child("hour").getValue();
+                        minute = (Integer)dataSnapshot.child("minute").getValue();
+                        media = (String)dataSnapshot.child("media").getValue();
+                        Log.d("dataSnapshot", hour+" "+minute+" "+media);
+                        alarm_insert(hour,minute,media);
+                    }
+                    i++;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     //sharedPreferences에 값 변동시 Main의 List 재설정
