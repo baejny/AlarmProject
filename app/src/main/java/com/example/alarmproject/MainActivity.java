@@ -23,15 +23,17 @@ import android.widget.Toast;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+import info.hoang8f.widget.FButton;
+
 public class MainActivity extends AppCompatActivity implements AlarmListener {
     int alarmCount;
     int alarmPointer;
 
     TimePicker picker;
     TextView textView;
-    Button btn_save;
-    Button btn_remove;
-    Button btn_removeAll;
+    FButton btn_save;
+    FButton btn_remove;
+    FButton btn_removeAll;
     Spinner spinner;
     Spinner TimeSpinner;
 
@@ -58,9 +60,12 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         spinner = (Spinner) findViewById(R.id.spinner);
         TimeSpinner = (Spinner) findViewById(R.id.spinner2);
         textView = (TextView)findViewById(R.id.textView);
-        btn_save = (Button) findViewById(R.id.button_save);
-        btn_remove = (Button) findViewById(R.id.button_remove);
-        btn_removeAll = (Button) findViewById(R.id.button_removeAll);
+        btn_save = (FButton) findViewById(R.id.button_save);
+        btn_save.setButtonColor(getColor(R.color.fbutton_color_peter_river));
+        btn_remove = (FButton) findViewById(R.id.button_remove);
+        btn_remove.setButtonColor(getColor(R.color.fbutton_color_orange));
+        btn_removeAll = (FButton) findViewById(R.id.button_removeAll);
+        btn_removeAll.setButtonColor(getColor(R.color.fbutton_color_pomegranate));
 
         // 스피너 초기화
         makeSpinnerList();

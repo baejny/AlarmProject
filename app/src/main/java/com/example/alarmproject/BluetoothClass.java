@@ -20,6 +20,9 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -80,7 +83,10 @@ public class BluetoothClass extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetoothxml);
+        setContentView(R.layout.activity_bluetooth);
+        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content2);
+        ImageView imageView=(ImageView)findViewById(R.id.centerImage);
+        rippleBackground.startRippleAnimation();
 
         // Initializes Bluetooth adapter.
         // BLE manager 설정, BLE manager를 이용하여 BLE adapter 설정
@@ -109,7 +115,6 @@ public class BluetoothClass extends AppCompatActivity {
         filters.add(filterBuilder);
         // 저전력 모드로 스캔하도록 설정
         ScanSettings settingBuilder = new ScanSettings.Builder().setScanMode(SCAN_MODE_LOW_POWER).build();
-
         mBluetoothLeScanner.startScan(filters, settingBuilder, mBLEScanCallback);
     }
     @Override
