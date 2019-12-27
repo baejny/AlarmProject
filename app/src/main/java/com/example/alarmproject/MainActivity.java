@@ -50,24 +50,6 @@ public class MainActivity extends AppCompatActivity implements AlarmListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        /* Scan 조건 체크 */
-        // REQUEST BLE ENABLE
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1);
-        }
-        // REQUEST FINE LOCATION PERMISSION
-        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1003);
-        }
-        Intent intent = getIntent();
-        if(intent.getIntExtra("bluetoothFind", 0) != 1){
-            Intent bluetoothIntent = new Intent(this, BluetoothService.class);
-            startService(bluetoothIntent);
-            //finish();
-        }
         sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
         am = new AlarmMethod(this, sharedPreferences);
 
