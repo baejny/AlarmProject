@@ -1,10 +1,8 @@
 package com.example.alarmproject;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -20,7 +18,6 @@ import android.content.pm.PackageManager;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.util.Log;
 
@@ -65,18 +62,18 @@ public class BluetoothClass extends AppCompatActivity {
         public void onScanResult(int callbackType, ScanResult result) {
             String device = result.getDevice().getName();
             BluetoothDevice dev = result.getDevice();
-            Log.d("test_T", "SCAN DEVICE : "+ device);
+            Log.d("test", "scanning : "+ device);
             if("HUSTAR_05".equals(device)){
-                Log.d("test_FIND", "Connecting DEVICE"+device);
+                Log.d("test", "Connecting DEVICE"+device);
                 mBluetoothLeScanner.stopScan(mBLEScanCallback);
-                dev.connectGatt(BluetoothClass.this, true, GattClientCallback); // 자동연결
+                dev.connectGatt(BluetoothClass.this, true, GattClientCallback);
             }
         }
 
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
-            Log.d("test1","errCode ---- "+errorCode);
+            Log.d("test","scan failed errCode = "+errorCode);
         }
     };
 
