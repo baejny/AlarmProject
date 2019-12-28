@@ -5,11 +5,13 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.content.Context;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.skyfishjy.library.RippleBackground;
+
+import info.hoang8f.widget.FButton;
 
 public class MediaPlayActivity extends AppCompatActivity {
 
@@ -31,15 +33,19 @@ public class MediaPlayActivity extends AppCompatActivity {
         String str = intent.getStringExtra("mediaSelect");
         Log.d("Mediaplay Spin number", str);
         if("은하".equals(str)){
-            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.eunha);
             iv.setImageResource(R.drawable.eunha);
+            mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.eunha);
         }else if("시완".equals(str)){
             iv.setImageResource(R.drawable.siwan);
             mp = MediaPlayer.create(MediaPlayActivity.this, R.raw.siwan);
         }
         mp.start();
 
-        Button btn_stop = findViewById(R.id.button_stop);
+        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content2);
+        rippleBackground.startRippleAnimation();
+
+        FButton btn_stop = (FButton)findViewById(R.id.button_stop);
+        btn_stop.setButtonColor(getColor(R.color.fbutton_color_nephritis));
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
