@@ -55,6 +55,7 @@ public class BluetoothClass extends AppCompatActivity {
                 Intent temp = new Intent(BluetoothClass.this, MainActivity.class);
                 temp.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(temp);
+                finish();
             }else if(_new_state == BluetoothProfile.STATE_DISCONNECTED){
             }
         }
