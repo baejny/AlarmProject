@@ -27,7 +27,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="13dp"
             android:gravity="center_horizontal"
-            android:text="Alarm project"
+            android:text="출석 시간 알리미"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:background="@color/custom2"
+            android:background="@color/custom1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -53,30 +53,43 @@
         <TextView
             android:id="@+id/textView_alarmList_delete"
             android:layout_width="300dp"
-            android:layout_height="160dp"
+            android:layout_height="180dp"
             android:gravity="center_horizontal"
-            android:lineSpacingExtra="10dp"
+            android:lineSpacingExtra="12dp"
             android:lines="5"
             android:maxLines="5"
             android:text="alarmList"
-            android:textSize="20dp"
+            android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.399" />
+            app:layout_constraintVertical_bias="0.42" />
+
+        <TextView
+            android:id="@+id/textView_delete"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:gravity="center_horizontal"
+            android:text="삭제할 알람 선택"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.28"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6525" />
 
         <Spinner
             android:id="@+id/spinner_delete"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.35"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.685" />
 
         <info.hoang8f.widget.FButton
             android:id="@+id/button_delete"
@@ -85,10 +98,23 @@
             android:text="DELETE"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.76"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.68" />
+
+        <TextView
+            android:id="@+id/textView_deleteAll"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:gravity="center_horizontal"
+            android:text="전체 알람 삭제"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.28"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.77" />
 
         <info.hoang8f.widget.FButton
             android:id="@+id/button_deleteAll"
@@ -97,10 +123,35 @@
             android:text="DELETE ALL"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.76"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.75" />
+            app:layout_constraintVertical_bias="0.78" />
+
+        <TextView
+            android:id="@+id/textView_database"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:gravity="center_horizontal"
+            android:text="데이터베이스 사용"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.87" />
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/button_database"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:text="DATABASE"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.76"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.88" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

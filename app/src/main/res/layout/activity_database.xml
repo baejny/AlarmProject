@@ -27,7 +27,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="13dp"
             android:gravity="center_horizontal"
-            android:text="Alarm project"
+            android:text="출석 시간 알리미"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:background="@color/custom3"
+            android:background="@color/custom1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -53,56 +53,68 @@
         <TextView
             android:id="@+id/textView_alarmList_database"
             android:layout_width="300dp"
-            android:layout_height="160dp"
+            android:layout_height="180dp"
             android:gravity="center_horizontal"
-            android:lineSpacingExtra="10dp"
+            android:lineSpacingExtra="12dp"
             android:lines="5"
             android:maxLines="5"
             android:text="alarmList"
-            android:textSize="20dp"
+            android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.399" />
+            app:layout_constraintVertical_bias="0.42" />
 
         <TextView
             android:id="@+id/textView_listName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Put List Name >"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:text="Put List Name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.176"
+            app:layout_constraintHorizontal_bias="0.325"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.665" />
+            app:layout_constraintVertical_bias="0.65" />
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="100dp"
             android:layout_height="40dp"
+            android:lines="1"
             android:singleLine="true"
-            android:lines = "1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.54"
+            app:layout_constraintHorizontal_bias="0.32"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.673" />
+            app:layout_constraintVertical_bias="0.7" />
 
-        <Button
+        <info.hoang8f.widget.FButton
             android:id="@+id/btn_save_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:text="save list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.884"
+            app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.681" />
+            app:layout_constraintVertical_bias="0.68" />
+
+        <TextView
+            android:id="@+id/textView_DbList"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:text="Database List"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.335"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.775" />
 
         <Spinner
             android:id="@+id/open_spinner"
@@ -110,34 +122,34 @@
             android:layout_height="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.12"
+            app:layout_constraintHorizontal_bias="0.34"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.793" />
+            app:layout_constraintVertical_bias="0.825" />
 
-        <Button
+        <info.hoang8f.widget.FButton
             android:id="@+id/btn_open_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:text="open list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.528"
+            app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.79" />
+            app:layout_constraintVertical_bias="0.78" />
 
-        <Button
+        <info.hoang8f.widget.FButton
             android:id="@+id/btn_delete_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:text="delete list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
+            app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.79" />
+            app:layout_constraintVertical_bias="0.88" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

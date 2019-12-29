@@ -78,12 +78,12 @@ public class AlarmMethod{
 
             if (calendar.before(Calendar.getInstance()))  {
                 calendar.add(Calendar.DATE, 1);
-                Toast.makeText(context,"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"다음날 같은 시간으로 설정합니다!", Toast.LENGTH_SHORT).show();
             }
 
             Date currentDateTime = calendar.getTime();
-            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-            Toast.makeText(context, date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+            //String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
+            //Toast.makeText(context, date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong(String.valueOf(alarmPointer), (long)calendar.getTimeInMillis());
@@ -102,7 +102,7 @@ public class AlarmMethod{
                 }
             }
         }else{
-            Toast.makeText(context, "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "알람이 가득 찼습니다.", Toast.LENGTH_SHORT).show();
         }
 
         if(mListener != null){
@@ -159,7 +159,7 @@ public class AlarmMethod{
                 editor.apply();
             }
         }else{
-            Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
         }
 
         if(mListener != null){
@@ -184,7 +184,7 @@ public class AlarmMethod{
                 }
             }
         }else{
-            Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "저장된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
         }
 
         if(mListener != null){
@@ -253,10 +253,10 @@ public class AlarmMethod{
         if(alarmListCount>0){
             mDatabase = FirebaseDatabase.getInstance().getReference();
             mDatabase.child(SelectedItemPosition).setValue(null);
-            Toast.makeText(context, "리스트가 삭제되었습니다!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "리스트가 삭제되었습니다!", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(context, "삭제할 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "삭제할 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -271,17 +271,16 @@ public class AlarmMethod{
             int i;
             for (i = 0; i < 5; i++) {
                 if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
-                    Long val = sharedPreferences.getLong(String.valueOf(i+1), 0);
-                    String str = sharedPreferences.getString(String.valueOf(i+1+10),null);
+                    Long val = sharedPreferences.getLong(String.valueOf(i), 0);
+                    String str = sharedPreferences.getString(String.valueOf(i+10),null);
                     mDatabase.child(list_name).child(String.valueOf(i+1)).child("time").setValue(val);
                     mDatabase.child(list_name).child(String.valueOf(i+1)).child("mediaNumber").setValue(str);
                 }
             }
-            Toast.makeText(context, "리스트가 저장되었습니다!", Toast.LENGTH_SHORT).show();
-            Log.d("save_AlarmListCount", String.valueOf(alarmListCount));
+            //Toast.makeText(context, "리스트가 저장되었습니다!", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(context, "더 이상 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+           //Toast.makeText(context, "더 이상 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -292,22 +291,20 @@ public class AlarmMethod{
             @Override
             public void onDataChange(@Nullable DataSnapshot dataSnapshot) {
                 for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()) {
-//                    Log.d("dataSnapshot1", String.valueOf(fileSnapshot.getKey()));// 1,2,3
-//                    Log.d("dataSnapshot2", String.valueOf(fileSnapshot.getValue()));//{hour=19, mediaNumber=은하, minute=7}
                     Calendar cal = Calendar.getInstance();
                     String num = fileSnapshot.getKey();
                     Long val = fileSnapshot.child("time").getValue(Long.class);
                     String str = fileSnapshot.child("mediaNumber").getValue(String.class);
                     cal.setTimeInMillis(val);
-                    int hour = cal.get(Calendar.HOUR);
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
                     int minute = cal.get(Calendar.MINUTE);
                     alarm_insert(hour,minute,str);
                 }
-                Toast.makeText(context, "리스트 오픈!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "리스트 오픈!", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onCancelled(@Nullable DatabaseError databaseError) {
-                Log.w("TAG: ", "Failed to read value", databaseError.toException());
+                //Log.w("TAG: ", "Failed to read value", databaseError.toException());
             }
         });
 

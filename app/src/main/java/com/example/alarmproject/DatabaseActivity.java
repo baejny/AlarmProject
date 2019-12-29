@@ -25,11 +25,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import info.hoang8f.widget.FButton;
+
 public class DatabaseActivity extends AppCompatActivity implements AlarmListener {
 
-    Button btn_save_list;
-    Button btn_open_list;
-    Button btn_del_list;
+    FButton btn_save_list;
+    FButton btn_open_list;
+    FButton btn_del_list;
     Spinner list_spinner;
     EditText editText;
 
@@ -51,9 +53,12 @@ public class DatabaseActivity extends AppCompatActivity implements AlarmListener
 
         list_spinner = (Spinner) findViewById(R.id.open_spinner);
         editText = (EditText) findViewById(R.id.editText);
-        btn_save_list = (Button) findViewById(R.id.btn_save_list);
-        btn_open_list = (Button) findViewById(R.id.btn_open_list);
-        btn_del_list = (Button) findViewById(R.id.btn_delete_list);
+        btn_save_list = (FButton) findViewById(R.id.btn_save_list);
+        btn_save_list.setButtonColor(getColor(R.color.custom1));
+        btn_open_list = (FButton) findViewById(R.id.btn_open_list);
+        btn_open_list.setButtonColor(getColor(R.color.custom1));
+        btn_del_list = (FButton) findViewById(R.id.btn_delete_list);
+        btn_del_list.setButtonColor(getColor(R.color.custom1));
 
 
         // SharedPreferences 초기화
@@ -74,6 +79,7 @@ public class DatabaseActivity extends AppCompatActivity implements AlarmListener
                 getEdit = getEdit.trim();
                 if(getEdit.getBytes().length>0){
                     am.save_list(editText.getText().toString(),alarmListCount);
+                    Toast.makeText(getApplicationContext(),"DB에 저장되었습니다!", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(),"리스트 제목을 적어주세요!", Toast.LENGTH_SHORT).show();
                 }
@@ -86,6 +92,7 @@ public class DatabaseActivity extends AppCompatActivity implements AlarmListener
             public void onClick(View arg0) {
                 if (list_spinner.getSelectedItem() != null) {
                     am.open_list(list_spinner.getSelectedItem().toString());
+                    Toast.makeText(getApplicationContext(),"DB에서 가져옵니다!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "가져올 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -98,6 +105,7 @@ public class DatabaseActivity extends AppCompatActivity implements AlarmListener
             public void onClick(View arg0) {
                 if(list_spinner.getSelectedItem()!=null){
                     am.remove_list(list_spinner.getSelectedItem().toString(),alarmListCount);
+                    Toast.makeText(getApplicationContext(),"DB에서 삭제합니다!", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(),"삭제할 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
                 }

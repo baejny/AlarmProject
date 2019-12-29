@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.skyfishjy.library.RippleBackground;
 
+import at.markushi.ui.CircleButton;
 import info.hoang8f.widget.FButton;
 
 public class MediaPlayActivity extends AppCompatActivity {
@@ -44,8 +45,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content2);
         rippleBackground.startRippleAnimation();
 
-        FButton btn_stop = (FButton)findViewById(R.id.button_stop);
-        btn_stop.setButtonColor(getColor(R.color.custom3));
+        CircleButton btn_stop = (CircleButton)findViewById(R.id.button_stop);
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

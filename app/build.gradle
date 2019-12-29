@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'info.hoang8f:fbutton:1.0.5'
+    implementation 'com.github.markushi:circlebutton:1.1'
 }
 
 

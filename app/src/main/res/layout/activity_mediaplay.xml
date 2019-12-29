@@ -11,16 +11,19 @@
         android:layout_height="match_parent"
         android:background="#FF000000">
 
-        <info.hoang8f.widget.FButton
+        <at.markushi.ui.CircleButton
             android:id="@+id/button_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="200dp"
-            android:text="알람 정지"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_action_tick"
+            app:cb_color="#353535"
+            app:cb_pressedRingWidth="8dip"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.75" />
 
         <com.skyfishjy.library.RippleBackground
             android:id="@+id/content2"

@@ -29,7 +29,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="13dp"
             android:gravity="center_horizontal"
-            android:text="Alarm project"
+            android:text="출석 시간 알리미"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,13 +57,13 @@
             android:layout_width="260dp"
             android:layout_height="220dp"
             android:timePickerMode="spinner"
-            android:textSize="24dp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4" />
+            app:layout_constraintVertical_bias="0.405" />
 
         <TextView
             android:id="@+id/textView_media"
@@ -73,10 +73,10 @@
             android:text="음성 선택"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintHorizontal_bias="0.315"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintVertical_bias="0.67" />
 
         <Spinner
             android:id="@+id/spinner_media"
@@ -84,10 +84,10 @@
             android:layout_height="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.45"
+            app:layout_constraintHorizontal_bias="0.33"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintVertical_bias="0.705" />
 
         <info.hoang8f.widget.FButton
             android:id="@+id/button_insert"
@@ -96,7 +96,7 @@
             android:text="INSERT"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintHorizontal_bias="0.76"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.7" />
@@ -109,10 +109,10 @@
             android:text="저장된 알람 갯수"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintVertical_bias="0.79" />
 
         <TextView
             android:id="@+id/textView_alarmCount2"
@@ -122,10 +122,10 @@
             android:text="null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.38"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintVertical_bias="0.82" />
 
         <info.hoang8f.widget.FButton
             android:id="@+id/button_showList"
@@ -134,22 +134,10 @@
             android:text="SHOW LIST"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintHorizontal_bias="0.76"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
-
-        <info.hoang8f.widget.FButton
-            android:id="@+id/button_database"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:text="DATABASE"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.85"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9" />
+            app:layout_constraintVertical_bias="0.82" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

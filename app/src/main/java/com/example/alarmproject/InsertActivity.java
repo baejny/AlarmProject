@@ -8,27 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import info.hoang8f.widget.FButton;
 
-public class InsertActivity extends AppCompatActivity implements AlarmListener {
+public class InsertActivity extends AppCompatActivity {
 
     TimePicker picker;
     android.widget.Spinner Spinner;
     FButton btn_insert;
     TextView tv_alarmCount;
     FButton btn_move_delete;
-    FButton btn_move_database;
 
     SharedPreferences sharedPreferences;
     AlarmMethod am;
-
-    @Override
-    public void onList(String msg) {
-        ((TextView)findViewById(R.id.textView_alarmCount2)).setText(msg);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +38,21 @@ public class InsertActivity extends AppCompatActivity implements AlarmListener {
         tv_alarmCount = (TextView) findViewById(R.id.textView_alarmCount2);
         Spinner = (Spinner) findViewById(R.id.spinner_media);
         btn_insert = (FButton) findViewById(R.id.button_insert);
-        btn_insert.setButtonColor(getColor(R.color.fbutton_color_turquoise));
+        btn_insert.setButtonColor(getColor(R.color.custom1));
         btn_move_delete = (FButton) findViewById(R.id.button_showList);
-        btn_move_delete.setButtonColor(getColor(R.color.fbutton_color_peter_river));
-        btn_move_database = (FButton) findViewById(R.id.button_database);
-        btn_move_database.setButtonColor(getColor(R.color.fbutton_color_amethyst));
+        btn_move_delete.setButtonColor(getColor(R.color.custom1));
+
 
         // 스피너 초기화
         makeSpinnerMediaList();
-        // 리스너 초기화
-        am.setListener(this);
 
         // 등록
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 am.alarm_insert(picker.getCurrentHour(), picker.getCurrentMinute(), Spinner.getSelectedItem().toString());
+                ((TextView)findViewById(R.id.textView_alarmCount2)).setText(String.valueOf(am.getAlarmCount()) + "개");
+                Toast.makeText(getApplicationContext(), String.valueOf(picker.getCurrentHour())+"시"+String.valueOf(picker.getCurrentMinute())+"분 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
             }
         });
         //삭제 액티비티로 이동
@@ -66,18 +60,7 @@ public class InsertActivity extends AppCompatActivity implements AlarmListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DeleteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
-            }
-        });
-        //데이터베이스 액티비티로 이동
-        btn_move_database.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }
         });
