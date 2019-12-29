@@ -20,6 +20,7 @@ public class InsertActivity extends AppCompatActivity implements AlarmListener {
     FButton btn_insert;
     TextView tv_alarmCount;
     FButton btn_move_delete;
+    FButton btn_move_database;
 
     SharedPreferences sharedPreferences;
     AlarmMethod am;
@@ -39,12 +40,14 @@ public class InsertActivity extends AppCompatActivity implements AlarmListener {
 
         picker=(TimePicker)findViewById(R.id.timePicker);
         picker.setIs24HourView(true);
+        tv_alarmCount = (TextView) findViewById(R.id.textView_alarmCount2);
         Spinner = (Spinner) findViewById(R.id.spinner_media);
         btn_insert = (FButton) findViewById(R.id.button_insert);
         btn_insert.setButtonColor(getColor(R.color.fbutton_color_turquoise));
-        tv_alarmCount = (TextView) findViewById(R.id.textView_alarmCount2);
         btn_move_delete = (FButton) findViewById(R.id.button_showList);
         btn_move_delete.setButtonColor(getColor(R.color.fbutton_color_peter_river));
+        btn_move_database = (FButton) findViewById(R.id.button_database);
+        btn_move_database.setButtonColor(getColor(R.color.fbutton_color_amethyst));
 
         // 스피너 초기화
         makeSpinnerMediaList();
@@ -63,6 +66,16 @@ public class InsertActivity extends AppCompatActivity implements AlarmListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DeleteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+        //데이터베이스 액티비티로 이동
+        btn_move_database.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);

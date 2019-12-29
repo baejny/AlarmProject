@@ -37,6 +37,9 @@
         <activity android:name=".DeleteActivity">
         </activity>
 
+        <activity android:name=".DatabaseActivity">
+        </activity>
+
         <activity android:name=".MediaPlayActivity">
         </activity>
 

@@ -11,24 +11,36 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AlarmMethod{
     Context context;
     SharedPreferences sharedPreferences;
     AlarmManager alarmManager;
 
+    HashMap<Integer, String> hm = new HashMap<>();
+    private DatabaseReference mDatabase;
+
     int alarmCount;
     int alarmPointer;
+
+    int alarmListCount = 0;
 
     private AlarmListener mListener;
     AlarmMethod(Context context, SharedPreferences sharedPreferences){
@@ -94,7 +106,7 @@ public class AlarmMethod{
         }
 
         if(mListener != null){
-            mListener.onList(String.valueOf(getAlarmCount())+ "개");
+            mListener.onList(make_list());
         }
     }
 
@@ -155,7 +167,7 @@ public class AlarmMethod{
         }
     }
 
-    //알람 삭제
+    //알람 전체 삭제
     void alarm_deleteAll(){
         alarmCount = getAlarmCount();
         if(alarmCount > 0){
@@ -181,7 +193,7 @@ public class AlarmMethod{
     }
 
     //디바이스 부팅시 알람 초기화
-    void alarm_boot(){
+    void alarm_boot() {
         int count = 0;
         for (int i = 0; i < 5; i++) {
             Long millis = sharedPreferences.getLong(String.valueOf(i), 0);
@@ -189,10 +201,10 @@ public class AlarmMethod{
                 Log.d("test", "boot test = " + i);
                 count++;
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(sharedPreferences.getLong(String.valueOf(i),0));
+                calendar.setTimeInMillis(sharedPreferences.getLong(String.valueOf(i), 0));
                 Intent alarmIntent = new Intent(context, AlarmReceiver.class);
                 alarmIntent.putExtra("alarmPointer", i);
-                alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i+10), null));
+                alarmIntent.putExtra("mediaSelect", sharedPreferences.getString(String.valueOf(i + 10), null));
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 if (alarmManager != null) {
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_DAY, pendingIntent);
@@ -202,7 +214,7 @@ public class AlarmMethod{
                 }
             }
         }
-        Toast.makeText(context, "[재부팅] " + String.valueOf(count) +"개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "[재부팅] " + String.valueOf(count) + "개의 알람이 있습니다.", Toast.LENGTH_SHORT).show();
     }
 
     //sharedPreferences에 값 변동시 Main의 List 재설정
@@ -232,6 +244,76 @@ public class AlarmMethod{
             }
         }
         return result;
+    }
+
+    void remove_list(String SelectedItemPosition, int ListCount){
+        //getListCount();
+        alarmListCount = ListCount;
+        Log.d("rm_AlarmListCount", String.valueOf(alarmListCount));
+        if(alarmListCount>0){
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            mDatabase.child(SelectedItemPosition).setValue(null);
+            Toast.makeText(context, "리스트가 삭제되었습니다!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context, "삭제할 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    // sharedPreference에서 가져와서 DB에 저장
+    void save_list(String list_name, int ListCount){
+        alarmListCount = ListCount;
+        remove_list(list_name, alarmListCount);
+        //getListCount();
+        if(alarmListCount<10) {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            int i;
+            for (i = 0; i < 5; i++) {
+                if (sharedPreferences.getLong(String.valueOf(i), 0) != 0) {
+                    Long val = sharedPreferences.getLong(String.valueOf(i+1), 0);
+                    String str = sharedPreferences.getString(String.valueOf(i+1+10),null);
+                    mDatabase.child(list_name).child(String.valueOf(i+1)).child("time").setValue(val);
+                    mDatabase.child(list_name).child(String.valueOf(i+1)).child("mediaNumber").setValue(str);
+                }
+            }
+            Toast.makeText(context, "리스트가 저장되었습니다!", Toast.LENGTH_SHORT).show();
+            Log.d("save_AlarmListCount", String.valueOf(alarmListCount));
+        }
+        else{
+            Toast.makeText(context, "더 이상 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void open_list(String SelectedItemPosition){
+        alarm_deleteAll();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child(SelectedItemPosition).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@Nullable DataSnapshot dataSnapshot) {
+                for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()) {
+//                    Log.d("dataSnapshot1", String.valueOf(fileSnapshot.getKey()));// 1,2,3
+//                    Log.d("dataSnapshot2", String.valueOf(fileSnapshot.getValue()));//{hour=19, mediaNumber=은하, minute=7}
+                    Calendar cal = Calendar.getInstance();
+                    String num = fileSnapshot.getKey();
+                    Long val = fileSnapshot.child("time").getValue(Long.class);
+                    String str = fileSnapshot.child("mediaNumber").getValue(String.class);
+                    cal.setTimeInMillis(val);
+                    int hour = cal.get(Calendar.HOUR);
+                    int minute = cal.get(Calendar.MINUTE);
+                    alarm_insert(hour,minute,str);
+                }
+                Toast.makeText(context, "리스트 오픈!", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onCancelled(@Nullable DatabaseError databaseError) {
+                Log.w("TAG: ", "Failed to read value", databaseError.toException());
+            }
+        });
+
+        if(mListener != null){
+            mListener.onList(make_list());
+        }
     }
 
 }

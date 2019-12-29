@@ -3,21 +3,33 @@ package com.example.alarmproject;
 import android.bluetooth.BluetoothAdapter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import info.hoang8f.widget.FButton;
 
 public class DeleteActivity extends AppCompatActivity implements AlarmListener {
-
-    int alarmCount;
-    int alarmPointer;
 
     TextView textView;
     FButton btn_delete;
@@ -29,7 +41,7 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
 
     @Override
     public void onList(String msg) {
-        ((TextView)findViewById(R.id.textView_alarmList)).setText(msg);
+        ((TextView) findViewById(R.id.textView_alarmList_delete)).setText(msg);
     }
 
     @Override
@@ -37,7 +49,7 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
-        textView = (TextView)findViewById(R.id.textView_alarmList);
+        textView = (TextView) findViewById(R.id.textView_alarmList_delete);
         spinner = (Spinner) findViewById(R.id.spinner_delete);
         btn_delete = (FButton) findViewById(R.id.button_delete);
         btn_delete.setButtonColor(getColor(R.color.fbutton_color_orange));
@@ -68,18 +80,17 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
                 am.alarm_deleteAll();
             }
         });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ((TextView)findViewById(R.id.textView_alarmList)).setText(am.make_list());
+        ((TextView) findViewById(R.id.textView_alarmList_delete)).setText(am.make_list());
     }
 
-    void makeSpinnerList(){
-        String[] facilityList = {"1","2","3","4","5"};
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String>(
+    void makeSpinnerList() {
+        String[] facilityList = {"1", "2", "3", "4", "5"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 facilityList);
