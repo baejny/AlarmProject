@@ -27,8 +27,6 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
     SharedPreferences sharedPreferences;
     AlarmMethod am;
 
-    private BluetoothAdapter mBluetoothAdapter;
-
     @Override
     public void onList(String msg) {
         ((TextView)findViewById(R.id.textView_alarmList)).setText(msg);
@@ -46,14 +44,14 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
         btn_deleteAll = (FButton) findViewById(R.id.button_deleteAll);
         btn_deleteAll.setButtonColor(getColor(R.color.fbutton_color_pomegranate));
 
-        // 스피너 초기화
-        makeSpinnerList();
-        // 리스너 초기화
-        am.setListener(this);
         // SharedPreferences 초기화
         sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
         // AlarmMethod 초기화
         am = new AlarmMethod(this, sharedPreferences);
+        // 스피너 초기화
+        makeSpinnerList();
+        // 리스너 초기화
+        am.setListener(this);
 
         // 삭제
         btn_delete.setOnClickListener(new View.OnClickListener() {

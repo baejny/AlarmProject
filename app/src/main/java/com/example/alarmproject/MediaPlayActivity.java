@@ -45,7 +45,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         rippleBackground.startRippleAnimation();
 
         FButton btn_stop = (FButton)findViewById(R.id.button_stop);
-        btn_stop.setButtonColor(getColor(R.color.fbutton_color_nephritis));
+        btn_stop.setButtonColor(getColor(R.color.custom3));
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

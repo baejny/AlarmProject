@@ -94,7 +94,7 @@ public class AlarmMethod{
         }
 
         if(mListener != null){
-            mListener.onList(make_list());
+            mListener.onList(String.valueOf(getAlarmCount())+ "개");
         }
     }
 

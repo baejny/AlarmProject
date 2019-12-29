@@ -22,7 +22,6 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".BluetoothClass">
-
         </activity>
 
         <activity android:name=".MainActivity">
@@ -32,19 +31,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DeleteActivity">
-
+        <activity android:name=".InsertActivity">
         </activity>
 
+        <activity android:name=".DeleteActivity">
+        </activity>
+
+        <activity android:name=".MediaPlayActivity">
+        </activity>
+
+        <receiver android:name=".AlarmReceiver"></receiver>
         <receiver android:name=".DeviceBootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".AlarmReceiver"></receiver>
-        <activity android:name=".MediaPlayActivity"></activity>
     </application>
 
 </manifest>

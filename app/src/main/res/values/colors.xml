@@ -3,7 +3,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="holo_purple">#ffaa66cc</color>
+
+    <color name="custom1">#BED2F5</color>
+    <color name="custom2">#F8EAA8</color>
+    <color name="custom3">#D999F3</color>
 
     <color name="fbutton_color_turquoise">#1abc9c</color>
     <color name="fbutton_color_green_sea">#16a085</color>
