@@ -54,7 +54,6 @@ public class MediaPlayActivity extends AppCompatActivity {
                 Intent intent = new Intent(MediaPlayActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
-                finish();
             }
         });
     }
@@ -62,6 +61,8 @@ public class MediaPlayActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mp.stop();
+        finish();
     }
 
 }
