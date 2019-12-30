@@ -74,8 +74,12 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                if (am.getAlarmCount() > 0) {
+                    Toast.makeText(getApplicationContext(), String.valueOf(spinner.getSelectedItemPosition() + 1) + "번째 알람이 삭제 되었습니다!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "삭제할 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
                 am.alarm_delete(spinner.getSelectedItemPosition());
-                Toast.makeText(getApplicationContext(), String.valueOf(spinner.getSelectedItemPosition())+"번째 알람이 삭제 되었습니다!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,8 +87,12 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
         btn_deleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (am.getAlarmCount() > 0) {
+                    Toast.makeText(getApplicationContext(), "전체 알람이 삭제 되었습니다!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "삭제할 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
                 am.alarm_deleteAll();
-                Toast.makeText(getApplicationContext(), String.valueOf(spinner.getSelectedItemPosition())+"전체 알람이 삭제 되었습니다!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -92,7 +100,8 @@ public class DeleteActivity extends AppCompatActivity implements AlarmListener {
         btn_move_database.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);;
+                Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
+                ;
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }

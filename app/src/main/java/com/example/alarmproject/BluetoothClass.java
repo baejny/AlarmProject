@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.widget.ImageView;
@@ -34,6 +35,9 @@ public class BluetoothClass extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     public static String SERVICE_STRING = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     public static UUID UUID_TDCS_SERVICE= UUID.fromString(SERVICE_STRING);
+    boolean already_bonded_flag = false;
+    private final static int SCAN_PERIOD= 5000;
+    private Handler scan_handler_;
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
@@ -42,6 +46,7 @@ public class BluetoothClass extends AppCompatActivity {
         @Override
         public void onConnectionStateChange(BluetoothGatt _gatt, int _status, int _new_state){
             super.onConnectionStateChange( _gatt, _status, _new_state );
+
             if(_status == BluetoothGatt.GATT_FAILURE){
                 Log.d("test_gatt", "GATT_FAILURE");
                 return;
@@ -85,7 +90,45 @@ public class BluetoothClass extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+    }
 
+    private void startScan(){
+        // 위와 같은 서비스를 제공하는 장치만 스캔하도록 scanFilter 설정
+        List<ScanFilter> filters = new ArrayList<>();
+        ScanFilter filterBuilder = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID_TDCS_SERVICE)).build();
+        filters.add(filterBuilder);
+        // 저전력 모드로 스캔하도록 설정
+        ScanSettings settingBuilder = new ScanSettings.Builder().setScanMode(SCAN_MODE_LOW_POWER).build();
+        mBluetoothLeScanner.startScan(filters, settingBuilder, mBLEScanCallback);
+        already_bonded_flag = true;
+
+        scan_handler_ = new Handler();
+        scan_handler_.postDelayed(this::stopScan, SCAN_PERIOD);
+    }
+
+    private void stopScan(){
+        if(already_bonded_flag && mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mBluetoothLeScanner!=null){
+            mBluetoothLeScanner.stopScan(mBLEScanCallback);
+        }
+        mBLEScanCallback = null;
+        already_bonded_flag = false;
+        scan_handler_= null;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(already_bonded_flag){
+            Intent temp = new Intent(BluetoothClass.this, MainActivity.class);
+            temp.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(temp);
+            finish();
+        }
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content2);
         ImageView imageView=(ImageView)findViewById(R.id.centerImage);
         rippleBackground.startRippleAnimation();
@@ -108,25 +151,12 @@ public class BluetoothClass extends AppCompatActivity {
 
         mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
         startScan();
-    }
 
-    private void startScan(){
-        // 위와 같은 서비스를 제공하는 장치만 스캔하도록 scanFilter 설정
-        List<ScanFilter> filters = new ArrayList<>();
-        ScanFilter filterBuilder = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID_TDCS_SERVICE)).build();
-        filters.add(filterBuilder);
-        // 저전력 모드로 스캔하도록 설정
-        ScanSettings settingBuilder = new ScanSettings.Builder().setScanMode(SCAN_MODE_LOW_POWER).build();
-        mBluetoothLeScanner.startScan(filters, settingBuilder, mBLEScanCallback);
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
 
     }
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
